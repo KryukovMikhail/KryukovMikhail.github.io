@@ -13,38 +13,48 @@ body {
   color: white;
 }
 
-/* HERO */
-.hero {
-  padding: 100px 20px 40px;
+/* NAV */
+.nav {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #222;
+}
+
+.nav span {
+  margin: 0 15px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.nav span:hover {
+  color: white;
+}
+
+/* PAGES */
+.page {
+  display: none;
   max-width: 1000px;
   margin: auto;
+  padding: 60px 20px;
 }
 
-.hero h1 {
-  font-size: 48px;
-  margin: 0;
-}
-
-.hero p {
-  color: #aaa;
+.active {
+  display: block;
 }
 
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  max-width: 1000px;
-  margin: auto;
-  padding: 20px;
 }
 
 /* CARD */
 .card {
   background: #111;
-  border: 1px solid #1f1f1f;
   padding: 20px;
   border-radius: 10px;
+  border: 1px solid #1f1f1f;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -54,113 +64,93 @@ body {
   border-color: #444;
 }
 
-/* MODAL */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  max-width: 700px;
-  background: #111;
-  padding: 30px;
-  border-radius: 10px;
-}
-
-.close {
+/* BACK */
+.back {
   cursor: pointer;
-  float: right;
-  font-size: 20px;
-  color: #aaa;
+  color: #888;
+  margin-bottom: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="hero">
+<div class="nav">
+  <span onclick="showPage('home')">Home</span>
+  <span onclick="showPage('about')">About</span>
+</div>
+
+<!-- HOME -->
+<div id="home" class="page active">
   <h1>Mikhail Kryukov</h1>
-  <p>Senior System Analyst / Solution Analyst</p>
+  <p>Senior System Analyst</p>
+
+  <div class="grid">
+
+    <div class="card" onclick="openCase('payment')">
+      <h3>Payment Integration</h3>
+      <p>Fintech API</p>
+    </div>
+
+    <div class="card" onclick="openCase('crm')">
+      <h3>CRM System</h3>
+      <p>Architecture</p>
+    </div>
+
+    <div class="card" onclick="openCase('erp')">
+      <h3>ERP (1C)</h3>
+      <p>Process modeling</p>
+    </div>
+
+  </div>
 </div>
 
-<div class="grid">
-
-  <div class="card" onclick="openCase('case1')">
-    <h3>Payment Integration</h3>
-    <p>Fintech API & transaction flow</p>
-  </div>
-
-  <div class="card" onclick="openCase('case2')">
-    <h3>CRM System</h3>
-    <p>System interactions & business logic</p>
-  </div>
-
-  <div class="card" onclick="openCase('case3')">
-    <h3>ERP (1C)</h3>
-    <p>Process modeling & automation</p>
-  </div>
-
+<!-- ABOUT -->
+<div id="about" class="page">
+  <h2>About</h2>
+  <p>
+    Senior System Analyst with 18+ years of experience in fintech,
+    system integration, and architecture.
+  </p>
 </div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeCase()">✕</span>
-    <div id="modal-body"></div>
-  </div>
+<!-- CASE PAGE -->
+<div id="case" class="page">
+  <div class="back" onclick="showPage('home')">← Back</div>
+  <div id="case-content"></div>
 </div>
 
 <script>
-function openCase(caseId) {
-  const content = {
-    case1: `
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+}
+
+function openCase(id) {
+  const cases = {
+    payment: `
       <h2>Payment Integration Platform</h2>
-      <p><b>Context:</b> Fintech system with external payment providers</p>
+      <p><b>Context:</b> fintech integrations</p>
       <p><b>What I did:</b></p>
       <ul>
         <li>Designed REST APIs</li>
-        <li>Defined integration flows</li>
+        <li>Built integration flows</li>
         <li>Created sequence diagrams</li>
       </ul>
-      <p><b>Impact:</b> Reduced transaction errors, improved reliability</p>
+      <p><b>Impact:</b> improved reliability</p>
     `,
-    case2: `
-      <h2>CRM System Architecture</h2>
-      <p><b>Context:</b> Internal CRM system</p>
-      <p><b>What I did:</b></p>
-      <ul>
-        <li>Defined system interactions</li>
-        <li>Documented API contracts</li>
-        <li>Aligned frontend & backend</li>
-      </ul>
-      <p><b>Impact:</b> Faster development, fewer misunderstandings</p>
+    crm: `
+      <h2>CRM Architecture</h2>
+      <p>Defined system interactions and API contracts</p>
     `,
-    case3: `
-      <h2>ERP Implementation (1C)</h2>
-      <p><b>Context:</b> Enterprise resource planning system</p>
-      <p><b>What I did:</b></p>
-      <ul>
-        <li>Modeled business processes (BPMN, IDEF0)</li>
-        <li>Wrote technical specifications</li>
-        <li>Supported implementation</li>
-      </ul>
-      <p><b>Impact:</b> Improved planning and reporting</p>
+    erp: `
+      <h2>ERP System</h2>
+      <p>Modeled processes (BPMN, IDEF0)</p>
     `
   };
 
-  document.getElementById("modal-body").innerHTML = content[caseId];
-  document.getElementById("modal").style.display = "flex";
-}
-
-function closeCase() {
-  document.getElementById("modal").style.display = "none";
+  document.getElementById("case-content").innerHTML = cases[id];
+  showPage('case');
 }
 </script>
 
