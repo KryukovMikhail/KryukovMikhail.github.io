@@ -11,6 +11,7 @@ body {
   font-family: -apple-system, sans-serif;
   background: #0b0b0b;
   color: white;
+  overflow-x: hidden;
 }
 
 /* NAV */
@@ -24,22 +25,28 @@ body {
   margin: 0 15px;
   cursor: pointer;
   color: #aaa;
+  transition: 0.3s;
 }
 
 .nav span:hover {
   color: white;
 }
 
-/* PAGES */
+/* PAGE */
 .page {
-  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.4s ease;
   max-width: 1000px;
   margin: auto;
   padding: 60px 20px;
 }
 
-.active {
-  display: block;
+.page.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
 }
 
 /* GRID */
@@ -56,12 +63,13 @@ body {
   border-radius: 10px;
   border: 1px solid #1f1f1f;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.02);
   border-color: #444;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 /* BACK */
@@ -69,6 +77,32 @@ body {
   cursor: pointer;
   color: #888;
   margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.back:hover {
+  color: white;
+}
+
+/* CASE CONTENT ANIMATION */
+#case-content {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HERO */
+h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.6s ease;
+}
+
+p {
+  color: #aaa;
 }
 </style>
 </head>
@@ -83,7 +117,7 @@ body {
 <!-- HOME -->
 <div id="home" class="page active">
   <h1>Mikhail Kryukov</h1>
-  <p>Senior System Analyst</p>
+  <p>Senior System Analyst / Solution Analyst</p>
 
   <div class="grid">
 
@@ -122,8 +156,13 @@ body {
 
 <script>
 function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(page).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  setTimeout(() => {
+    document.getElementById(page).classList.add('active');
+  }, 50);
 }
 
 function openCase(id) {
@@ -137,7 +176,7 @@ function openCase(id) {
         <li>Built integration flows</li>
         <li>Created sequence diagrams</li>
       </ul>
-      <p><b>Impact:</b> improved reliability</p>
+      <p><b>Impact:</b> reduced transaction errors</p>
     `,
     crm: `
       <h2>CRM Architecture</h2>
