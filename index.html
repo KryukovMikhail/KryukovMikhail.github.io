@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Михаил Крюков — Системный аналитик</title>
+    <!-- Фавиконка -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         :root {
             --primary-color: #1a5276;
             --secondary-color: #2980b9;
-            --bg-color: #f4f6f7;
             --text-dark: #2c3e50;
             --text-light: #ffffff;
             --text-muted: #566573;
@@ -31,11 +32,44 @@
         .container {
             max-width: 1100px;
             margin: 40px auto;
-            display: flex;
             background: #ffffff;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border-radius: 8px;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* Language Switcher */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            z-index: 10;
+            font-size: 16px;
+            font-weight: 600;
+            background: #eef1f5;
+            padding: 5px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .lang-switch a {
+            text-decoration: none;
+            color: #7f8c8d;
+            transition: color 0.3s;
+            padding: 0 5px;
+        }
+
+        .lang-switch a.active-lang {
+            color: var(--secondary-color);
+        }
+
+        .lang-switch a:hover {
+            color: var(--primary-color);
+        }
+
+        .content-wrapper {
+            display: flex;
         }
 
         /* Sidebar Styles */
@@ -51,18 +85,14 @@
             margin-bottom: 30px;
         }
 
-        .avatar-placeholder {
+        .avatar-img {
             width: 120px;
             height: 120px;
-            background-color: var(--secondary-color);
             border-radius: 50%;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: bold;
+            object-fit: cover;
             border: 4px solid #ffffff;
+            margin: 0 auto 15px;
+            display: block;
         }
 
         .sidebar h1 {
@@ -226,8 +256,10 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
+            .content-wrapper {
                 flex-direction: column;
+            }
+            .container {
                 margin: 0;
                 border-radius: 0;
             }
@@ -242,170 +274,355 @@
             .job-header {
                 flex-direction: column;
             }
+            .lang-switch {
+                top: 10px;
+                right: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="profile-header">
-            <div class="avatar-placeholder">МК</div>
-            <h1>Михаил Крюков</h1>
-            <h2>Системный аналитик</h2>
-        </div>
+    <!-- Language Switcher -->
+    <div class="lang-switch">
+        <a href="#" id="switch-ru" class="active-lang" onclick="switchLang('ru')">RU</a> | <a href="#" id="switch-en" onclick="switchLang('en')">EN</a>
+    </div>
 
-        <div class="contact-info">
-            <h3>Контакты</h3>
-            <div class="contact-item">📍 Москва, Россия</div>
-            <div class="contact-item">📞 <a href="tel:+79651132447">+7 (965) 113-24-47</a></div>
-            <div class="contact-item">✉️ <a href="mailto:michail.krjukov@gmail.com">michail.krjukov@gmail.com</a></div>
-            <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank">GitHub Profile</a></div>
-        </div>
-
-        <div class="skills-section">
-            <h3>Навыки</h3>
-            <div class="skill-group-title">Анализ и проектирование</div>
-            <ul class="skills-list">
-                <li>Системный и бизнес-анализ</li>
-                <li>AS IS / TO BE, User Story, Use Case</li>
-                <li>UML, BPMN, IDEF0, EPC</li>
-                <li>ГОСТ 34</li>
-            </ul>
-            
-            <div class="skill-group-title">Интеграции и API</div>
-            <ul class="skills-list">
-                <li>REST API, JSON</li>
-                <li>Swagger</li>
-                <li>Проектирование интеграций</li>
-            </ul>
-
-            <div class="skill-group-title">Инструменты и методы</div>
-            <ul class="skills-list">
-                <li>Jira, Confluence, Draw.io</li>
-                <li>Agile, Scrum, ПСИ</li>
-            </ul>
-        </div>
-
-        <div class="languages-section">
-            <h3>Языки</h3>
-            <ul class="skills-list">
-                <li>🇷🇺 Русский — Родной</li>
-                <li>🇬🇧 Английский — B1</li>
-            </ul>
-        </div>
-
-        <div class="education-section">
-            <h3>Образование</h3>
-            <p><strong>2015</strong> Московская академия рынка труда и ИТ</p>
-            <p style="font-size: 13px; opacity: 0.9;">Прикладная информатика (в экономике)</p>
-            <br>
-            <p><strong>2021</strong> GeekBrains (Mail.ru Group)</p>
-            <p style="font-size: 13px; opacity: 0.9;">Системный и бизнес-анализ</p>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <h2>Обо мне</h2>
-        <div class="summary-box">
-            Системный аналитик с опытом работы в финтех-секторе и более 10 лет в сфере бизнес-анализа, методологии и управления ИТ-проектами. Специализируюсь на проектировании интеграций (REST API, JSON), разработке архитектуры сервисов и трансформации бизнес-требований в системные решения (AS IS / TO BE). Умею выстраивать эффективное взаимодействие между бизнесом, разработкой и смежными командами (inner source). Имею успешный опыт совмещения ролей системного аналитика и Scrum-мастера.
-        </div>
-
-        <h2>Опыт работы</h2>
-
-        <div class="job">
-            <div class="job-header">
-                <div>
-                    <div class="job-title">Главный инженер по разработке (Системный аналитик)</div>
-                    <div class="company">Сбер | Москва</div>
-                </div>
-                <div class="dates">Дек 2022 — Настоящее время</div>
+    <!-- ================= РУССКАЯ ВЕРСИЯ ================= -->
+    <div id="content-ru" class="content-wrapper">
+        <aside class="sidebar">
+            <div class="profile-header">
+                <!-- Фотография -->
+                <img src="photo.jpg" alt="Михаил Крюков" class="avatar-img">
+                <h1>Михаил Крюков</h1>
+                <h2>Системный аналитик</h2>
             </div>
-            <p><em>Проект: Разработка АС ЕФС</em></p>
-            <ul>
-                <li>Проектирование и разработка функциональных и нефункциональных требований к ПО.</li>
-                <li>Проектирование интеграционного взаимодействия (REST API, JSON) и архитектуры сервисов.</li>
-                <li>Перенос функционала в рамках процесса L2P в целевую АС (анализ AS IS, проектирование TO BE).</li>
-                <li>Участие в принятии архитектурных решений и проведении ПСИ.</li>
-                <li>Разбор инцидентов продакшена, root-cause анализ проблем.</li>
-                <li>Постановка задач разработчикам, контроль процесса разработки и тестирования.</li>
-                <li>Выполнение функций Scrum-мастера (дейли, груминги, ретроспективы, планирования).</li>
-                <li class="key-artifacts">Ключевые артефакты: User Stories, Use Cases, Sequence diagram, спецификации REST API (Swagger), экранные формы.</li>
-            </ul>
-        </div>
 
-        <div class="job">
-            <div class="job-header">
-                <div>
-                    <div class="job-title">Старший аналитик</div>
-                    <div class="company">Сбер | Москва</div>
-                </div>
-                <div class="dates">Май 2021 — Дек 2022</div>
+            <div class="contact-info">
+                <h3>Контакты</h3>
+                <div class="contact-item">📍 Москва, Россия</div>
+                <div class="contact-item">📞 <a href="tel:+79651132447">+7 (965) 113-24-47</a></div>
+                <div class="contact-item">✉️ <a href="mailto:michail.krjukov@gmail.com">michail.krjukov@gmail.com</a></div>
+                <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank">GitHub Profile</a></div>
             </div>
-            <ul>
-                <li>Анализ и проектирование системных интеграций бэкенда с внешними АС.</li>
-                <li>Описание логики взаимодействия фронтенда с бэкендом, проектирование поведения UI-элементов на основе дизайн-макетов.</li>
-                <li>Синхронизация требований со смежными командами по модели inner source.</li>
-                <li>Сопровождение полного цикла разработки: от постановки ТЗ до поддержки тестирования и участия в ПСИ.</li>
-                <li>Участие в архитектурных комитетах.</li>
-                <li>Управление Scrum-процессами в команде.</li>
-            </ul>
-        </div>
 
-        <div class="job">
-            <div class="job-header">
-                <div>
-                    <div class="job-title">Главный специалист отдела ИТ</div>
-                    <div class="company">РН-СтройКонтроль | Москва</div>
-                </div>
-                <div class="dates">Мар 2021 — Май 2021</div>
+            <div class="skills-section">
+                <h3>Навыки</h3>
+                <div class="skill-group-title">Анализ и проектирование</div>
+                <ul class="skills-list">
+                    <li>Системный и бизнес-анализ</li>
+                    <li>AS IS / TO BE, User Story, Use Case</li>
+                    <li>UML, BPMN, IDEF0, EPC</li>
+                    <li>ГОСТ 34</li>
+                </ul>
+                
+                <div class="skill-group-title">Интеграции и API</div>
+                <ul class="skills-list">
+                    <li>REST API, JSON</li>
+                    <li>Swagger</li>
+                    <li>Проектирование интеграций</li>
+                </ul>
+
+                <div class="skill-group-title">Инструменты и методы</div>
+                <ul class="skills-list">
+                    <li>Jira, Confluence, Draw.io</li>
+                    <li>Agile, Scrum, ПСИ</li>
+                </ul>
             </div>
-            <ul>
-                <li>Сбор и описание требований для автоматизации бизнес-процессов управленческого и договорного учета.</li>
-                <li>Методологическая поддержка ключевых пользователей при внедрении ИТ-решений.</li>
-            </ul>
-        </div>
 
-        <div class="job">
-            <div class="job-header">
-                <div>
-                    <div class="job-title">Главный специалист отдела аналитической и методологической поддержки</div>
-                    <div class="company">ОАО "ВНИПИнефть" | Москва</div>
-                </div>
-                <div class="dates">Ноя 2019 — Мар 2021</div>
+            <div class="languages-section">
+                <h3>Языки</h3>
+                <ul class="skills-list">
+                    <li>🇷🇺 Русский — Родной</li>
+                    <li>🇬🇧 Английский — B1</li>
+                </ul>
             </div>
-            <ul>
-                <li>Разработка методологии управленческого учета и контроль ее применения.</li>
-                <li>Описание и реинжиниринг бизнес-процессов (BPMN, IDEF0).</li>
-                <li>Разработка ТЗ и технической документации по проектам автоматизации.</li>
-                <li>Тестирование ПО и методологическая поддержка пользователей.</li>
-                <li class="results">Результаты: Успешно автоматизированы блоки контрактинга, закупок и управления портфелем заказов; разработаны ПиМИ, пользовательские инструкции; проведена апробация системы.</li>
-            </ul>
-        </div>
 
-        <div class="job">
-            <div class="job-header">
-                <div>
-                    <div class="job-title">Главный специалист отдела управления проектами</div>
-                    <div class="company">ОАО "ВНИПИнефть" | Москва</div>
-                </div>
-                <div class="dates">Дек 2011 — Окт 2019</div>
+            <div class="education-section">
+                <h3>Образование</h3>
+                <p><strong>2015</strong> Московская академия рынка труда и ИТ</p>
+                <p style="font-size: 13px; opacity: 0.9;">Прикладная информатика (в экономике)</p>
+                <br>
+                <p><strong>2021</strong> GeekBrains (Mail.ru Group)</p>
+                <p style="font-size: 13px; opacity: 0.9;">Системный и бизнес-анализ</p>
             </div>
-            <ul>
-                <li>Формирование годового портфеля проектов и доходной части бизнес-плана.</li>
-                <li>Контроль сроков реализации проектов, оценка рисков, факторный анализ отклонений от бизнес-плана.</li>
-                <li>Подготовка управленческой отчетности и аналитических материалов для руководства.</li>
-                <li class="key-project">Ключевой проект: Внедрение информационной системы ресурсного планирования на базе 1С.</li>
-                <li>Описал бизнес-процессы в нотациях IDEF0, BPMN с предложениями по реинжинирингу.</li>
-                <li>Разработал ТЗ для блоков: учет договоров, ресурсное планирование, реестр документации, TimeSheet.</li>
-                <li>Спроектировал выходные отчетные формы и форму тематического плана компании.</li>
-            </ul>
-        </div>
+        </aside>
 
-    </main>
+        <main class="main-content">
+            <h2>Обо мне</h2>
+            <div class="summary-box">
+                Системный аналитик с опытом работы в финтех-секторе и более 10 лет в сфере бизнес-анализа, методологии и управления ИТ-проектами. Специализируюсь на проектировании интеграций (REST API, JSON), разработке архитектуры сервисов и трансформации бизнес-требований в системные решения (AS IS / TO BE). Умею выстраивать эффективное взаимодействие между бизнесом, разработкой и смежными командами (inner source). Имею успешный опыт совмещения ролей системного аналитика и Scrum-мастера.
+            </div>
+
+            <h2>Опыт работы</h2>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Главный инженер по разработке (Системный аналитик)</div>
+                        <div class="company">Сбер | Москва</div>
+                    </div>
+                    <div class="dates">Дек 2022 — Настоящее время</div>
+                </div>
+                <p><em>Проект: Разработка АС ЕФС</em></p>
+                <ul>
+                    <li>Проектирование и разработка функциональных и нефункциональных требований к ПО.</li>
+                    <li>Проектирование интеграционного взаимодействия (REST API, JSON) и архитектуры сервисов.</li>
+                    <li>Перенос функционала в рамках процесса L2P в целевую АС (анализ AS IS, проектирование TO BE).</li>
+                    <li>Участие в принятии архитектурных решений и проведении ПСИ.</li>
+                    <li>Разбор инцидентов продакшена, root-cause анализ проблем.</li>
+                    <li>Постановка задач разработчикам, контроль процесса разработки и тестирования.</li>
+                    <li>Выполнение функций Scrum-мастера (дейли, груминги, ретроспективы, планирования).</li>
+                    <li class="key-artifacts">Ключевые артефакты: User Stories, Use Cases, Sequence diagram, спецификации REST API (Swagger), экранные формы.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Старший аналитик</div>
+                        <div class="company">Сбер | Москва</div>
+                    </div>
+                    <div class="dates">Май 2021 — Дек 2022</div>
+                </div>
+                <ul>
+                    <li>Анализ и проектирование системных интеграций бэкенда с внешними АС.</li>
+                    <li>Описание логики взаимодействия фронтенда с бэкендом, проектирование поведения UI-элементов на основе дизайн-макетов.</li>
+                    <li>Синхронизация требований со смежными командами по модели inner source.</li>
+                    <li>Сопровождение полного цикла разработки: от постановки ТЗ до поддержки тестирования и участия в ПСИ.</li>
+                    <li>Участие в архитектурных комитетах.</li>
+                    <li>Управление Scrum-процессами в команде.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Главный специалист отдела ИТ</div>
+                        <div class="company">РН-СтройКонтроль | Москва</div>
+                    </div>
+                    <div class="dates">Мар 2021 — Май 2021</div>
+                </div>
+                <ul>
+                    <li>Сбор и описание требований для автоматизации бизнес-процессов управленческого и договорного учета.</li>
+                    <li>Методологическая поддержка ключевых пользователей при внедрении ИТ-решений.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Главный специалист отдела аналитической и методологической поддержки</div>
+                        <div class="company">ОАО "ВНИПИнефть" | Москва</div>
+                    </div>
+                    <div class="dates">Ноя 2019 — Мар 2021</div>
+                </div>
+                <ul>
+                    <li>Разработка методологии управленческого учета и контроль ее применения.</li>
+                    <li>Описание и реинжиниринг бизнес-процессов (BPMN, IDEF0).</li>
+                    <li>Разработка ТЗ и технической документации по проектам автоматизации.</li>
+                    <li>Тестирование ПО и методологическая поддержка пользователей.</li>
+                    <li class="results">Результаты: Успешно автоматизированы блоки контрактинга, закупок и управления портфелем заказов; разработаны ПиМИ, пользовательские инструкции; проведена апробация системы.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Главный специалист отдела управления проектами</div>
+                        <div class="company">ОАО "ВНИПИнефть" | Москва</div>
+                    </div>
+                    <div class="dates">Дек 2011 — Окт 2019</div>
+                </div>
+                <ul>
+                    <li>Формирование годового портфеля проектов и доходной части бизнес-плана.</li>
+                    <li>Контроль сроков реализации проектов, оценка рисков, факторный анализ отклонений от бизнес-плана.</li>
+                    <li>Подготовка управленческой отчетности и аналитических материалов для руководства.</li>
+                    <li class="key-project">Ключевой проект: Внедрение информационной системы ресурсного планирования на базе 1С.</li>
+                    <li>Описал бизнес-процессы в нотациях IDEF0, BPMN с предложениями по реинжинирингу.</li>
+                    <li>Разработал ТЗ для блоков: учет договоров, ресурсное планирование, реестр документации, TimeSheet.</li>
+                    <li>Спроектировал выходные отчетные формы и форму тематического плана компании.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= АНГЛИЙСКАЯ ВЕРСИЯ ================= -->
+    <div id="content-en" class="content-wrapper" style="display: none;">
+        <aside class="sidebar">
+            <div class="profile-header">
+                <img src="photo.jpg" alt="Mikhail Kryukov" class="avatar-img">
+                <h1>Mikhail Kryukov</h1>
+                <h2>System Analyst</h2>
+            </div>
+
+            <div class="contact-info">
+                <h3>Contacts</h3>
+                <div class="contact-item">📍 Moscow, Russia</div>
+                <div class="contact-item">📞 <a href="tel:+79651132447">+7 (965) 113-24-47</a></div>
+                <div class="contact-item">✉️ <a href="mailto:michail.krjukov@gmail.com">michail.krjukov@gmail.com</a></div>
+                <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank">GitHub Profile</a></div>
+            </div>
+
+            <div class="skills-section">
+                <h3>Skills</h3>
+                <div class="skill-group-title">Analysis & Design</div>
+                <ul class="skills-list">
+                    <li>System & Business Analysis</li>
+                    <li>AS IS / TO BE, User Story, Use Case</li>
+                    <li>UML, BPMN, IDEF0, EPC</li>
+                    <li>GOST 34</li>
+                </ul>
+                
+                <div class="skill-group-title">Integrations & API</div>
+                <ul class="skills-list">
+                    <li>REST API, JSON</li>
+                    <li>Swagger</li>
+                    <li>Integration Design</li>
+                </ul>
+
+                <div class="skill-group-title">Tools & Methodologies</div>
+                <ul class="skills-list">
+                    <li>Jira, Confluence, Draw.io</li>
+                    <li>Agile, Scrum, UAT</li>
+                </ul>
+            </div>
+
+            <div class="languages-section">
+                <h3>Languages</h3>
+                <ul class="skills-list">
+                    <li>🇷🇺 Russian — Native</li>
+                    <li>🇬🇧 English — B1</li>
+                </ul>
+            </div>
+
+            <div class="education-section">
+                <h3>Education</h3>
+                <p><strong>2015</strong> Moscow Academy of Labor Market and IT</p>
+                <p style="font-size: 13px; opacity: 0.9;">Applied Informatics (in Economics)</p>
+                <br>
+                <p><strong>2021</strong> GeekBrains (Mail.ru Group)</p>
+                <p style="font-size: 13px; opacity: 0.9;">System and Business Analysis</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <h2>About Me</h2>
+            <div class="summary-box">
+                System Analyst with experience in the fintech sector and over 10 years in business analysis, methodology, and IT project management. Specializing in integration design (REST API, JSON), service architecture development, and transforming business requirements into system solutions (AS IS / TO BE). Skilled in building effective collaboration between business, development, and cross-functional teams (inner source). Successfully combined the roles of System Analyst and Scrum Master.
+            </div>
+
+            <h2>Experience</h2>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Lead Development Engineer (System Analyst)</div>
+                        <div class="company">Sber | Moscow</div>
+                    </div>
+                    <div class="dates">Dec 2022 — Present</div>
+                </div>
+                <p><em>Project: Development of AS EFS</em></p>
+                <ul>
+                    <li>Design and development of functional and non-functional software requirements.</li>
+                    <li>Design of integration interactions (REST API, JSON) and service architecture.</li>
+                    <li>Functional migration within the L2P process to the target AS (AS IS analysis, TO BE design).</li>
+                    <li>Participation in architectural decision-making and UAT (User Acceptance Testing).</li>
+                    <li>Production incident analysis and root-cause investigation.</li>
+                    <li>Task assignment to developers, overseeing development and testing processes.</li>
+                    <li>Scrum Master duties (dailies, groomings, retrospectives, planning).</li>
+                    <li class="key-artifacts">Key Artifacts: User Stories, Use Cases, Sequence diagrams, REST API specifications (Swagger), UI wireframes.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Senior Analyst</div>
+                        <div class="company">Sber | Moscow</div>
+                    </div>
+                    <div class="dates">May 2021 — Dec 2022</div>
+                </div>
+                <ul>
+                    <li>Analysis and design of backend system integrations with external systems.</li>
+                    <li>Describing frontend-backend interaction logic, designing UI element behavior based on design mockups.</li>
+                    <li>Requirements synchronization with cross-functional teams via the inner source model.</li>
+                    <li>Full-cycle development support: from writing specifications to testing support and UAT.</li>
+                    <li>Participation in architectural committees.</li>
+                    <li>Scrum process management within the team.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Chief IT Specialist</div>
+                        <div class="company">RN-StroyKontrol | Moscow</div>
+                    </div>
+                    <div class="dates">Mar 2021 — May 2021</div>
+                </div>
+                <ul>
+                    <li>Gathering and describing requirements for automating management and contract accounting business processes.</li>
+                    <li>Methodological support for key users during IT solution implementation.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Chief Specialist, Analytical & Methodological Support Dept.</div>
+                        <div class="company">OJSC VNIPIneft | Moscow</div>
+                    </div>
+                    <div class="dates">Nov 2019 — Mar 2021</div>
+                </div>
+                <ul>
+                    <li>Development of management accounting methodology and compliance control.</li>
+                    <li>Description and reengineering of business processes (BPMN, IDEF0).</li>
+                    <li>Development of Technical Specifications (SOW) and technical documentation for automation projects.</li>
+                    <li>Software testing and methodological user support.</li>
+                    <li class="results">Results: Successfully automated contracting, procurement, and order portfolio management modules; developed operating manuals and user instructions; conducted system appraisal.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div>
+                        <div class="job-title">Chief Specialist, Project Management Dept.</div>
+                        <div class="company">OJSC VNIPIneft | Moscow</div>
+                    </div>
+                    <div class="dates">Dec 2011 — Oct 2019</div>
+                </div>
+                <ul>
+                    <li>Formation of the annual project portfolio and revenue side of the business plan.</li>
+                    <li>Project timeline control, risk assessment, variance analysis from the business plan.</li>
+                    <li>Preparation of management reporting and analytical materials for executives.</li>
+                    <li class="key-project">Key Project: Implementation of a resource planning information system based on 1C.</li>
+                    <li>Described business processes using IDEF0 and BPMN notations with reengineering proposals.</li>
+                    <li>Developed SOW for modules: contract management, resource planning, document registry, TimeSheet.</li>
+                    <li>Designed output reporting forms and the company's thematic plan template.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
 </div>
+
+<!-- Скрипт для переключения языков -->
+<script>
+    function switchLang(lang) {
+        if (lang === 'en') {
+            document.getElementById('content-ru').style.display = 'none';
+            document.getElementById('content-en').style.display = 'flex';
+            document.getElementById('switch-ru').classList.remove('active-lang');
+            document.getElementById('switch-en').classList.add('active-lang');
+        } else {
+            document.getElementById('content-ru').style.display = 'flex';
+            document.getElementById('content-en').style.display = 'none';
+            document.getElementById('switch-ru').classList.add('active-lang');
+            document.getElementById('switch-en').classList.remove('active-lang');
+        }
+    }
+</script>
 
 </body>
 </html>
