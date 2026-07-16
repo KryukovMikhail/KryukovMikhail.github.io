@@ -1,197 +1,411 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mikhail Kryukov</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Михаил Крюков — Системный аналитик</title>
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #2980b9;
+            --bg-color: #f4f6f7;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --text-muted: #566573;
+            --border-color: #d5dbdb;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: -apple-system, sans-serif;
-  background: #0b0b0b;
-  color: white;
-  overflow-x: hidden;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-/* NAV */
-.nav {
-  padding: 20px;
-  text-align: center;
-  border-bottom: 1px solid #222;
-}
+        body {
+            background-color: #eef1f5;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
 
-.nav span {
-  margin: 0 15px;
-  cursor: pointer;
-  color: #aaa;
-  transition: 0.3s;
-}
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: flex;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-.nav span:hover {
-  color: white;
-}
+        /* Sidebar Styles */
+        .sidebar {
+            width: 30%;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 40px 30px;
+        }
 
-/* PAGE */
-.page {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition: all 0.4s ease;
-  max-width: 1000px;
-  margin: auto;
-  padding: 60px 20px;
-}
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-.page.active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: all;
-}
+        .avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            border: 4px solid #ffffff;
+        }
 
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
+        .sidebar h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            border: none;
+            padding: 0;
+        }
 
-/* CARD */
-.card {
-  background: #111;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid #1f1f1f;
-  cursor: pointer;
-  transition: transform 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
-}
+        .sidebar h2 {
+            font-size: 16px;
+            font-weight: 400;
+            opacity: 0.9;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: #444;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
+        .contact-info, .skills-section, .languages-section, .education-section {
+            margin-bottom: 30px;
+        }
 
-/* BACK */
-.back {
-  cursor: pointer;
-  color: #888;
-  margin-bottom: 20px;
-  transition: 0.3s;
-}
+        .sidebar h3 {
+            font-size: 18px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            color: #d4e6f1;
+        }
 
-.back:hover {
-  color: white;
-}
+        .contact-item {
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-/* CASE CONTENT ANIMATION */
-#case-content {
-  animation: fadeIn 0.5s ease;
-}
+        .contact-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+        .contact-item a:hover {
+            color: #aed6f1;
+        }
 
-/* HERO */
-h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
-  animation: fadeIn 0.6s ease;
-}
+        .skills-list {
+            list-style: none;
+        }
 
-p {
-  color: #aaa;
-}
-</style>
+        .skills-list li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            background: rgba(255,255,255,0.1);
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+
+        .skill-group-title {
+            font-size: 13px;
+            color: #aed6f1;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            width: 70%;
+            padding: 40px 50px;
+        }
+
+        .main-content h2 {
+            font-size: 22px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            margin-top: 40px;
+        }
+
+        .main-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .summary-box {
+            background-color: #eaf2f8;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px 20px;
+            border-radius: 0 5px 5px 0;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .job {
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .job::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .company {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .dates {
+            font-size: 14px;
+            color: #7f8c8d;
+            white-space: nowrap;
+            background: #eef1f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .job ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .job li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .key-artifacts, .results, .key-project {
+            font-weight: 500;
+        }
+
+        .key-project {
+            margin-top: 10px;
+            color: var(--primary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin: 0;
+                border-radius: 0;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 30px 20px;
+            }
+            .main-content {
+                width: 100%;
+                padding: 30px 20px;
+            }
+            .job-header {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="nav">
-  <span onclick="showPage('home')">Home</span>
-  <span onclick="showPage('about')">About</span>
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="profile-header">
+            <div class="avatar-placeholder">МК</div>
+            <h1>Михаил Крюков</h1>
+            <h2>Системный аналитик</h2>
+        </div>
+
+        <div class="contact-info">
+            <h3>Контакты</h3>
+            <div class="contact-item">📍 Москва, Россия</div>
+            <div class="contact-item">📞 <a href="tel:+79651132447">+7 (965) 113-24-47</a></div>
+            <div class="contact-item">✉️ <a href="mailto:michail.krjukov@gmail.com">michail.krjukov@gmail.com</a></div>
+            <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank">GitHub Profile</a></div>
+        </div>
+
+        <div class="skills-section">
+            <h3>Навыки</h3>
+            <div class="skill-group-title">Анализ и проектирование</div>
+            <ul class="skills-list">
+                <li>Системный и бизнес-анализ</li>
+                <li>AS IS / TO BE, User Story, Use Case</li>
+                <li>UML, BPMN, IDEF0, EPC</li>
+                <li>ГОСТ 34</li>
+            </ul>
+            
+            <div class="skill-group-title">Интеграции и API</div>
+            <ul class="skills-list">
+                <li>REST API, JSON</li>
+                <li>Swagger</li>
+                <li>Проектирование интеграций</li>
+            </ul>
+
+            <div class="skill-group-title">Инструменты и методы</div>
+            <ul class="skills-list">
+                <li>Jira, Confluence, Draw.io</li>
+                <li>Agile, Scrum, ПСИ</li>
+            </ul>
+        </div>
+
+        <div class="languages-section">
+            <h3>Языки</h3>
+            <ul class="skills-list">
+                <li>🇷🇺 Русский — Родной</li>
+                <li>🇬🇧 Английский — B1</li>
+            </ul>
+        </div>
+
+        <div class="education-section">
+            <h3>Образование</h3>
+            <p><strong>2015</strong> Московская академия рынка труда и ИТ</p>
+            <p style="font-size: 13px; opacity: 0.9;">Прикладная информатика (в экономике)</p>
+            <br>
+            <p><strong>2021</strong> GeekBrains (Mail.ru Group)</p>
+            <p style="font-size: 13px; opacity: 0.9;">Системный и бизнес-анализ</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h2>Обо мне</h2>
+        <div class="summary-box">
+            Системный аналитик с опытом работы в финтех-секторе и более 10 лет в сфере бизнес-анализа, методологии и управления ИТ-проектами. Специализируюсь на проектировании интеграций (REST API, JSON), разработке архитектуры сервисов и трансформации бизнес-требований в системные решения (AS IS / TO BE). Умею выстраивать эффективное взаимодействие между бизнесом, разработкой и смежными командами (inner source). Имею успешный опыт совмещения ролей системного аналитика и Scrum-мастера.
+        </div>
+
+        <h2>Опыт работы</h2>
+
+        <div class="job">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Главный инженер по разработке (Системный аналитик)</div>
+                    <div class="company">Сбер | Москва</div>
+                </div>
+                <div class="dates">Дек 2022 — Настоящее время</div>
+            </div>
+            <p><em>Проект: Разработка АС ЕФС</em></p>
+            <ul>
+                <li>Проектирование и разработка функциональных и нефункциональных требований к ПО.</li>
+                <li>Проектирование интеграционного взаимодействия (REST API, JSON) и архитектуры сервисов.</li>
+                <li>Перенос функционала в рамках процесса L2P в целевую АС (анализ AS IS, проектирование TO BE).</li>
+                <li>Участие в принятии архитектурных решений и проведении ПСИ.</li>
+                <li>Разбор инцидентов продакшена, root-cause анализ проблем.</li>
+                <li>Постановка задач разработчикам, контроль процесса разработки и тестирования.</li>
+                <li>Выполнение функций Scrum-мастера (дейли, груминги, ретроспективы, планирования).</li>
+                <li class="key-artifacts">Ключевые артефакты: User Stories, Use Cases, Sequence diagram, спецификации REST API (Swagger), экранные формы.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Старший аналитик</div>
+                    <div class="company">Сбер | Москва</div>
+                </div>
+                <div class="dates">Май 2021 — Дек 2022</div>
+            </div>
+            <ul>
+                <li>Анализ и проектирование системных интеграций бэкенда с внешними АС.</li>
+                <li>Описание логики взаимодействия фронтенда с бэкендом, проектирование поведения UI-элементов на основе дизайн-макетов.</li>
+                <li>Синхронизация требований со смежными командами по модели inner source.</li>
+                <li>Сопровождение полного цикла разработки: от постановки ТЗ до поддержки тестирования и участия в ПСИ.</li>
+                <li>Участие в архитектурных комитетах.</li>
+                <li>Управление Scrum-процессами в команде.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Главный специалист отдела ИТ</div>
+                    <div class="company">РН-СтройКонтроль | Москва</div>
+                </div>
+                <div class="dates">Мар 2021 — Май 2021</div>
+            </div>
+            <ul>
+                <li>Сбор и описание требований для автоматизации бизнес-процессов управленческого и договорного учета.</li>
+                <li>Методологическая поддержка ключевых пользователей при внедрении ИТ-решений.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Главный специалист отдела аналитической и методологической поддержки</div>
+                    <div class="company">ОАО "ВНИПИнефть" | Москва</div>
+                </div>
+                <div class="dates">Ноя 2019 — Мар 2021</div>
+            </div>
+            <ul>
+                <li>Разработка методологии управленческого учета и контроль ее применения.</li>
+                <li>Описание и реинжиниринг бизнес-процессов (BPMN, IDEF0).</li>
+                <li>Разработка ТЗ и технической документации по проектам автоматизации.</li>
+                <li>Тестирование ПО и методологическая поддержка пользователей.</li>
+                <li class="results">Результаты: Успешно автоматизированы блоки контрактинга, закупок и управления портфелем заказов; разработаны ПиМИ, пользовательские инструкции; проведена апробация системы.</li>
+            </ul>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <div>
+                    <div class="job-title">Главный специалист отдела управления проектами</div>
+                    <div class="company">ОАО "ВНИПИнефть" | Москва</div>
+                </div>
+                <div class="dates">Дек 2011 — Окт 2019</div>
+            </div>
+            <ul>
+                <li>Формирование годового портфеля проектов и доходной части бизнес-плана.</li>
+                <li>Контроль сроков реализации проектов, оценка рисков, факторный анализ отклонений от бизнес-плана.</li>
+                <li>Подготовка управленческой отчетности и аналитических материалов для руководства.</li>
+                <li class="key-project">Ключевой проект: Внедрение информационной системы ресурсного планирования на базе 1С.</li>
+                <li>Описал бизнес-процессы в нотациях IDEF0, BPMN с предложениями по реинжинирингу.</li>
+                <li>Разработал ТЗ для блоков: учет договоров, ресурсное планирование, реестр документации, TimeSheet.</li>
+                <li>Спроектировал выходные отчетные формы и форму тематического плана компании.</li>
+            </ul>
+        </div>
+
+    </main>
 </div>
-
-<!-- HOME -->
-<div id="home" class="page active">
-  <h1>Mikhail Kryukov</h1>
-  <p>Senior System Analyst / Solution Analyst</p>
-
-  <div class="grid">
-
-    <div class="card" onclick="openCase('payment')">
-      <h3>Payment Integration</h3>
-      <p>Fintech API</p>
-    </div>
-
-    <div class="card" onclick="openCase('crm')">
-      <h3>CRM System</h3>
-      <p>Architecture</p>
-    </div>
-
-    <div class="card" onclick="openCase('erp')">
-      <h3>ERP (1C)</h3>
-      <p>Process modeling</p>
-    </div>
-
-  </div>
-</div>
-
-<!-- ABOUT -->
-<div id="about" class="page">
-  <h2>About</h2>
-  <p>
-    Senior System Analyst with 18+ years of experience in fintech,
-    system integration, and architecture.
-  </p>
-</div>
-
-<!-- CASE PAGE -->
-<div id="case" class="page">
-  <div class="back" onclick="showPage('home')">← Back</div>
-  <div id="case-content"></div>
-</div>
-
-<script>
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => {
-    p.classList.remove('active');
-  });
-
-  setTimeout(() => {
-    document.getElementById(page).classList.add('active');
-  }, 50);
-}
-
-function openCase(id) {
-  const cases = {
-    payment: `
-      <h2>Payment Integration Platform</h2>
-      <p><b>Context:</b> fintech integrations</p>
-      <p><b>What I did:</b></p>
-      <ul>
-        <li>Designed REST APIs</li>
-        <li>Built integration flows</li>
-        <li>Created sequence diagrams</li>
-      </ul>
-      <p><b>Impact:</b> reduced transaction errors</p>
-    `,
-    crm: `
-      <h2>CRM Architecture</h2>
-      <p>Defined system interactions and API contracts</p>
-    `,
-    erp: `
-      <h2>ERP System</h2>
-      <p>Modeled processes (BPMN, IDEF0)</p>
-    `
-  };
-
-  document.getElementById("case-content").innerHTML = cases[id];
-  showPage('case');
-}
-</script>
 
 </body>
 </html>
