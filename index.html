@@ -8,12 +8,12 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         :root {
-            --primary-color: #1a5276;
-            --secondary-color: #2980b9;
-            --text-dark: #2c3e50;
-            --text-light: #ffffff;
-            --text-muted: #566573;
-            --border-color: #d5dbdb;
+            --primary-color: #0f172a; /* Глубокий темный синий для сайдбара */
+            --secondary-color: #38bdf8; /* Яркий небесно-голубой для акцентов */
+            --text-dark: #e2e8f0;      /* Светлый текст на основном фоне */
+            --text-light: #f8fafc;     /* Белый текст в сайдбаре */
+            --text-muted: #94a3b8;     /* Приглушенный серый для дат и подзаголовков */
+            --border-color: #334155;   /* Темные границы */
         }
 
         * {
@@ -24,7 +24,7 @@
         }
 
         body {
-            background-color: #eef1f5;
+            background-color: #020617; /* Очень темный фон страницы */
             color: var(--text-dark);
             line-height: 1.6;
         }
@@ -32,8 +32,8 @@
         .container {
             max-width: 1100px;
             margin: 40px auto;
-            background: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #1e293b; /* Темный фон карточки резюме */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             border-radius: 8px;
             overflow: hidden;
             position: relative;
@@ -47,15 +47,15 @@
             z-index: 10;
             font-size: 16px;
             font-weight: 600;
-            background: #eef1f5;
+            background: #334155;
             padding: 5px 12px;
             border-radius: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .lang-switch a {
             text-decoration: none;
-            color: #7f8c8d;
+            color: #64748b;
             transition: color 0.3s;
             padding: 0 5px;
         }
@@ -65,7 +65,7 @@
         }
 
         .lang-switch a:hover {
-            color: var(--primary-color);
+            color: #f1f5f9;
         }
 
         .content-wrapper {
@@ -90,7 +90,7 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #ffffff;
+            border: 4px solid var(--secondary-color); /* Голубая рамка вокруг фото */
             margin: 0 auto 15px;
             display: block;
         }
@@ -120,7 +120,7 @@
             border-bottom: 2px solid var(--secondary-color);
             padding-bottom: 8px;
             margin-bottom: 15px;
-            color: #d4e6f1;
+            color: #7dd3fc;
         }
 
         .contact-item {
@@ -138,7 +138,7 @@
         }
 
         .contact-item a:hover {
-            color: #aed6f1;
+            color: var(--secondary-color);
         }
 
         .skills-list {
@@ -148,14 +148,15 @@
         .skills-list li {
             margin-bottom: 8px;
             font-size: 14px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05); /* Едва заметный фон для навыков */
             padding: 6px 10px;
             border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .skill-group-title {
             font-size: 13px;
-            color: #aed6f1;
+            color: var(--secondary-color);
             margin-bottom: 5px;
             margin-top: 10px;
             font-weight: 600;
@@ -169,7 +170,7 @@
 
         .main-content h2 {
             font-size: 22px;
-            color: var(--primary-color);
+            color: var(--secondary-color); /* Яркие голубые заголовки */
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
             margin-bottom: 25px;
@@ -181,7 +182,7 @@
         }
 
         .summary-box {
-            background-color: #eaf2f8;
+            background-color: #0f172a; /* Более темный блок "О себе" */
             border-left: 5px solid var(--secondary-color);
             padding: 15px 20px;
             border-radius: 0 5px 5px 0;
@@ -205,6 +206,7 @@
             height: 10px;
             background-color: var(--secondary-color);
             border-radius: 50%;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); /* Светящийся эффект точки */
         }
 
         .job-header {
@@ -217,7 +219,7 @@
         .job-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #f1f5f9; /* Максимально светлый для должностей */
         }
 
         .company {
@@ -228,9 +230,9 @@
 
         .dates {
             font-size: 14px;
-            color: #7f8c8d;
+            color: var(--text-muted);
             white-space: nowrap;
-            background: #eef1f5;
+            background: #0f172a;
             padding: 3px 8px;
             border-radius: 4px;
         }
@@ -251,7 +253,7 @@
 
         .key-project {
             margin-top: 10px;
-            color: var(--primary-color);
+            color: var(--secondary-color);
         }
 
         /* Responsive Design */
@@ -367,7 +369,7 @@
                 <div class="job-header">
                     <div>
                         <div class="job-title">Главный инженер по разработке (Системный аналитик)</div>
-                        <div class="company">Сбер | Москва</div>
+                        <div class="company"> ПАО "Сбербанк" | Москва</div>
                     </div>
                     <div class="dates">Октябрь 2024 — Настоящее время</div>
                 </div>
@@ -378,19 +380,19 @@
                     <li>Ведение базы знаний в Confluence: актуализация документации, структурирование артефактов анализа</li>
                     <li>Участие в принятии архитектурных решений и проведении ПСИ</li>
                     <li>Участие в груминге и планировании спринтов, оценка трудозатрат на аналитику</li>
-                    <li>Взаимодействие с разработчиками, тестировщиками, DevOps и продуктовой командой на протяжении всего цикла разработки</li>
+                    <li>​Взаимодействие с разработчиками, тестировщиками, DevOps и продуктовой командой на протяжении всего цикла разработки</li>
                     <li>Описание методики нагрузочного тестирования</li>
                     <li class="key-artifacts">Ключевые достижения:</li>
                     <li class="key-artifacts">Участие в разработке курса по системному анализу в Корпоративном Университете</li>
                     <li class="key-artifacts">Участие в пилотировании ИИ-инструментов в производственном процессе (AI PDLC)</li>
                 </ul>
-            </div>
+                </div>
 
            <div class="job">
                 <div class="job-header">
                     <div>
                         <div class="job-title">Главный инженер по разработке (Системный аналитик)</div>
-                        <div class="company">Сбер | Москва</div>
+                        <div class="company"> ПАО "Сбербанк" | Москва</div>
                     </div>
                     <div class="dates">Декабрь 2022 — Октябрь 2024</div>
                 </div>
@@ -414,7 +416,7 @@
                 <div class="job-header">
                     <div>
                         <div class="job-title">Старший аналитик</div>
-                        <div class="company">Сбер | Москва</div>
+                        <div class="company"> ПАО "Сбербанк" | Москва</div>
                     </div>
                     <div class="dates">Май 2021 — Декабрь 2022</div>
                 </div>
@@ -432,7 +434,7 @@
                 <div class="job-header">
                     <div>
                         <div class="job-title">Главный специалист отдела ИТ</div>
-                        <div class="company">РН-СтройКонтроль | Москва</div>
+                        <div class="company"> ОАО "РН-СтройКонтроль" | Москва</div>
                     </div>
                     <div class="dates">Март 2021 — Май 2021</div>
                 </div>
