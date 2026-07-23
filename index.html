@@ -8,12 +8,12 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         :root {
-            --primary-color: #0f172a; /* Глубокий темный синий для сайдбара */
-            --secondary-color: #38bdf8; /* Яркий небесно-голубой для акцентов */
-            --text-dark: #e2e8f0;      /* Светлый текст на основном фоне */
-            --text-light: #f8fafc;     /* Белый текст в сайдбаре */
-            --text-muted: #94a3b8;     /* Приглушенный серый для дат и подзаголовков */
-            --border-color: #334155;   /* Темные границы */
+            --primary-color: #0f172a;
+            --secondary-color: #38bdf8;
+            --text-dark: #e2e8f0;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
 
         * {
@@ -24,7 +24,7 @@
         }
 
         body {
-            background-color: #020617; /* Очень темный фон страницы */
+            background-color: #020617;
             color: var(--text-dark);
             line-height: 1.6;
         }
@@ -32,14 +32,13 @@
         .container {
             max-width: 1100px;
             margin: 40px auto;
-            background: #1e293b; /* Темный фон карточки резюме */
+            background: #1e293b;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             border-radius: 8px;
             overflow: hidden;
             position: relative;
         }
 
-        /* Language Switcher */
         .lang-switch {
             position: absolute;
             top: 20px;
@@ -72,7 +71,6 @@
             display: flex;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: 30%;
             background-color: var(--primary-color);
@@ -90,7 +88,7 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--secondary-color); /* Голубая рамка вокруг фото */
+            border: 4px solid var(--secondary-color);
             margin: 0 auto 15px;
             display: block;
         }
@@ -148,7 +146,7 @@
         .skills-list li {
             margin-bottom: 8px;
             font-size: 14px;
-            background: rgba(255,255,255,0.05); /* Едва заметный фон для навыков */
+            background: rgba(255,255,255,0.05);
             padding: 6px 10px;
             border-radius: 4px;
             border: 1px solid rgba(255,255,255,0.1);
@@ -162,7 +160,6 @@
             font-weight: 600;
         }
 
-        /* Main Content Styles */
         .main-content {
             width: 70%;
             padding: 40px 50px;
@@ -170,7 +167,7 @@
 
         .main-content h2 {
             font-size: 22px;
-            color: var(--secondary-color); /* Яркие голубые заголовки */
+            color: var(--secondary-color);
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
             margin-bottom: 25px;
@@ -182,7 +179,7 @@
         }
 
         .summary-box {
-            background-color: #0f172a; /* Более темный блок "О себе" */
+            background-color: #0f172a;
             border-left: 5px solid var(--secondary-color);
             padding: 15px 20px;
             border-radius: 0 5px 5px 0;
@@ -206,7 +203,7 @@
             height: 10px;
             background-color: var(--secondary-color);
             border-radius: 50%;
-            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6); /* Светящийся эффект точки */
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
         }
 
         .job-header {
@@ -219,7 +216,7 @@
         .job-title {
             font-size: 18px;
             font-weight: 600;
-            color: #f1f5f9; /* Максимально светлый для должностей */
+            color: #f1f5f9;
         }
 
         .company {
@@ -254,9 +251,9 @@
         .key-project {
             margin-top: 10px;
             color: var(--secondary-color);
+            list-style-type: none; /* Убирает кружок булита для строки "Ключевые достижения" */
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .content-wrapper {
                 flex-direction: column;
@@ -286,7 +283,6 @@
 <body>
 
 <div class="container">
-    <!-- Language Switcher -->
     <div class="lang-switch">
         <a href="#" id="switch-ru" class="active-lang" onclick="switchLang('ru')">RU</a> | <a href="#" id="switch-en" onclick="switchLang('en')">EN</a>
     </div>
@@ -295,7 +291,6 @@
     <div id="content-ru" class="content-wrapper">
         <aside class="sidebar">
             <div class="profile-header">
-                <!-- Фотография -->
                 <img src="photo.jpg" alt="Михаил Крюков" class="avatar-img">
                 <h1>Михаил Крюков</h1>
                 <h2>Системный аналитик</h2>
@@ -368,7 +363,7 @@
                 Системный аналитик с опытом работы в финтех-секторе 5 лет и более 5 лет в сфере бизнес-анализа, методологии и управления ИТ-проектами. Специализируюсь на проектировании интеграций (REST API, JSON, Kafka), разработке архитектуры сервисов и трансформации бизнес-требований в системные решения (AS IS / TO BE). Умею выстраивать эффективное взаимодействие между бизнесом, разработкой и смежными командами (inner source). Имею успешный опыт совмещения ролей системного аналитика и Scrum-мастера.
             </div>
             <div class="summary-box">
-               Также увлекаюсь спортом, в особенности бегом на длинные дистанции (марафоны), также люблю плавание, беговые лыжи и сноуборд. Люблю читать, смотреть фильмы и путешестовать.
+               Также увлекаюсь спортом, в особенности бегом на длинные дистанции (марафоны), также люблю плавание, беговые лыжи и сноуборд. Люблю читать, смотреть фильмы и путешествовать.
             </div>
 
             <h2>Опыт работы</h2>
@@ -394,7 +389,7 @@
                     <li class="key-project">Ключевые достижения:</li>
                     <li>Участие в разработке курса по системному анализу в Корпоративном Университете</li>
                     <li>Участие в разработке требований по процессу оформления автокредитов неклиентам Банка</li>
-                    <li">Участие в разработке требований по онлайн-подписанию согласий БКИ и кредитного договора при оформлении в дилерском центре</li>
+                    <li>Участие в разработке требований по онлайн-подписанию согласий БКИ и кредитного договора при оформлении в дилерском центре</li>
                 </ul>
             </div>
 
@@ -519,7 +514,6 @@
                 <div class="contact-item">*️⃣ <a href="https://vk.ru/mkrukov" target="_blank">VK Profile</a></div>
                 <div class="contact-item">📱 <a href="https://t.me/MikhailKryukov" target="_blank">Telegram Profile</a></div>
                 <div class="contact-item">🖥️ <a href="https://t.me/ForSystemAnalyst" target="_blank">System Analysis Channel</a></div>
-                <div class="contact-item">🏃 <a href="https://t.me/RunningLikeLife" target="_blank">Running Channel</a></div>
             </div>
 
             <div class="skills-section">
@@ -578,7 +572,7 @@
                 System Analyst with 5 years of experience in the fintech sector and over 5 years in business analysis, methodology, and IT project management. Specializing in integration design (REST API, JSON, Kafka), service architecture development, and transforming business requirements into system solutions (AS IS / TO BE). Skilled in building effective collaboration between business, development, and cross-functional teams (inner source). Successfully combined the roles of System Analyst and Scrum Master.
             </div>
             <div class="summary-box">
-               I am also passionate about sports, especially long-distance running (marathons)
+               I am also passionate about sports, especially long-distance running (marathons), as well as swimming, cross-country skiing, and snowboarding. I also enjoy reading, watching movies, and traveling.
             </div>
 
             <h2>Experience</h2>
@@ -591,8 +585,9 @@
                     </div>
                     <div class="dates">Oct 2024 — Present</div>
                 </div>
-                <p><em>Project: EKP.Middle Auto</em></p>
+                <p><em>Project "Auto Loans"</em></p>
                 <ul>
+                    <li>Participation in piloting AI tools in the production process (AI PDLC)</li>
                     <li>Service architecture design and integration interaction description in META</li>
                     <li>Design and description of API contracts (REST, Kafka)</li>
                     <li>Maintaining the knowledge base in Confluence: updating documentation, structuring analysis artifacts</li>
@@ -600,8 +595,10 @@
                     <li>Participation in grooming and sprint planning, estimating analysis efforts</li>
                     <li>Collaboration with developers, QA, DevOps, and the product team throughout the development lifecycle</li>
                     <li>Description of load testing methodology</li>
-                    <li class="key-project">Key Achievement: Participation in the development of a System Analysis course at the Corporate University</li>
-                    <li class="key-project">Key Achievement: Participation in piloting AI tools in the production process (AI PDLC)</li>
+                    <li class="key-project">Key Achievements:</li>
+                    <li>Participation in the development of a System Analysis course at the Corporate University</li>
+                    <li>Participation in the development of requirements for the process of issuing auto loans to non-clients of the Bank</li>
+                    <li>Participation in the development of requirements for online signing of Credit Bureau (BKI) consents and credit agreements during processing at the dealer center</li>
                 </ul>
             </div>
 
@@ -613,7 +610,7 @@
                     </div>
                     <div class="dates">Dec 2022 — Oct 2024</div>
                 </div>
-                <p><em>Project: EFS.Nash Biznes</em></p>
+                <p><em>Project "EFS.Nash Biznes" (CRM)</em></p>
                 <ul>
                     <li>Design and development of functional and non-functional software requirements</li>
                     <li>Design of integration interactions (REST API, JSON) and service architecture</li>
@@ -623,7 +620,9 @@
                     <li>Task assignment to developers, overseeing development and testing processes</li>
                     <li>Scrum Master duties (dailies, groomings, retrospectives, planning)</li>
                     <li>Key Artifacts: User Stories, Use Cases, Sequence diagrams, REST API specifications (Swagger), UI wireframes</li>
-                    <li class="key-project">Result: Updating documentation in accordance with functional and non-functional requirements</li>
+                    <li class="key-project">Key Achievements:</li>
+                    <li>Updating documentation in accordance with functional and non-functional requirements</li>
+                    <li>Migration of functionality from Legacy to the target AS as part of the L2P process</li>
                 </ul>
             </div>
 
@@ -635,6 +634,7 @@
                     </div>
                     <div class="dates">May 2021 — Dec 2022</div>
                 </div>
+                <p><em>Project "EFS.Nash Biznes" (CRM)</em></p>
                 <ul>
                     <li>Analysis and design of backend system integrations with external systems</li>
                     <li>Describing frontend-backend interaction logic, designing UI element behavior based on design mockups</li>
@@ -642,6 +642,8 @@
                     <li>Full-cycle development support: from writing specifications to testing support and UAT</li>
                     <li>Participation in architectural committees</li>
                     <li>Scrum process management within the team</li>
+                    <li class="key-project">Key Achievements:</li>
+                    <li>Participation in describing the service architecture and conceptual architecture of the functional area (KA FO)</li>
                 </ul>
             </div>
 
@@ -649,7 +651,7 @@
                 <div class="job-header">
                     <div>
                         <div class="job-title">Chief IT Specialist</div>
-                        <div class="company">OJSC RN-StroyKontrol | Moscow</div>
+                        <div class="company">LLC "RN-StroyKontrol" | Moscow</div>
                     </div>
                     <div class="dates">Mar 2021 — May 2021</div>
                 </div>
@@ -667,12 +669,14 @@
                     </div>
                     <div class="dates">Nov 2019 — Mar 2021</div>
                 </div>
+                <p><em>Project "ERP: Resource Planning"</em></p>
                 <ul>
                     <li>Development of management accounting methodology and compliance control</li>
                     <li>Description and reengineering of business processes (BPMN, IDEF0)</li>
                     <li>Development of Technical Specifications (SOW) and technical documentation for automation projects</li>
                     <li>Software testing and methodological user support</li>
-                    <li class="key-project">Results: Successfully automated contracting, procurement, and order portfolio management modules; developed operating manuals and user instructions; conducted system appraisal</li>
+                    <li class="key-project">Key Achievements:</li>
+                    <li>Successfully automated contracting, procurement, and order portfolio management modules; developed operating manuals and user instructions; conducted system appraisal</li>
                 </ul>
             </div>
 
@@ -691,14 +695,14 @@
                     <li>Description of business processes using IDEF0 and BPMN notations with reengineering proposals</li>
                     <li>Development of SOW for modules: contract management, resource planning, document registry, TimeSheet</li>
                     <li>Design of output reporting forms and the company's thematic plan template</li>
-                    <li class="key-project">Key Result: Implementation of a resource planning information system based on 1C</li>
+                    <li class="key-project">Key Achievements:</li>
+                    <li>Implementation of a resource planning information system based on 1C</li>
                 </ul>
             </div>
         </main>
     </div>
 </div>
 
-<!-- Скрипт для переключения языков -->
 <script>
     function switchLang(lang) {
         if (lang === 'en') {
