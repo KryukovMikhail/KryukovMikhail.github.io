@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Михаил Крюков — Системный аналитик</title>
+    <meta name="description" content="Михаил Крюков — системный аналитик (финтех, интеграции REST API / Kafka, архитектура сервисов). Резюме на русском и английском.">
+    <!-- Превью ссылки в Telegram, VK и других мессенджерах (Open Graph) -->
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Михаил Крюков — Системный аналитик">
+    <meta property="og:description" content="Системный аналитик: финтех, проектирование интеграций (REST API, Kafka), архитектура сервисов.">
+    <meta property="og:url" content="https://kryukovmikhail.github.io/">
+    <meta property="og:image" content="https://kryukovmikhail.github.io/photo.jpg">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary">
     <!-- Фавиконка -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
@@ -52,19 +62,28 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        .lang-switch a {
-            text-decoration: none;
+        .lang-switch button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font: inherit;
             color: #64748b;
             transition: color 0.3s;
             padding: 0 5px;
         }
 
-        .lang-switch a.active-lang {
+        .lang-switch button.active-lang {
             color: var(--secondary-color);
         }
 
-        .lang-switch a:hover {
+        .lang-switch button:hover {
             color: #f1f5f9;
+        }
+
+        .lang-switch button:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
         }
 
         .content-wrapper {
@@ -284,7 +303,7 @@
 
 <div class="container">
     <div class="lang-switch">
-        <a href="#" id="switch-ru" class="active-lang" onclick="switchLang('ru')">RU</a> | <a href="#" id="switch-en" onclick="switchLang('en')">EN</a>
+        <button type="button" id="switch-ru" class="active-lang" aria-pressed="true" onclick="switchLang('ru')">RU</button> | <button type="button" id="switch-en" aria-pressed="false" onclick="switchLang('en')">EN</button>
     </div>
 
     <!-- ================= РУССКАЯ ВЕРСИЯ ================= -->
@@ -301,10 +320,10 @@
                 <div class="contact-item">📍 Москва, Россия</div>
                 <div class="contact-item">📞 <a href="tel:+79651132447">+7 (965) 113-24-47</a></div>
                 <div class="contact-item">✉️ <a href="mailto:michail.krjukov@gmail.com">michail.krjukov@gmail.com</a></div>
-                <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank">GitHub Profile</a></div>
-                <div class="contact-item">*️⃣ <a href="https://vk.ru/mkrukov" target="_blank"> Страница в VK</a></div>
-                <div class="contact-item">📱 <a href="https://t.me/MikhailKryukov" target="_blank">Страница в Telegram</a></div>
-                <div class="contact-item">🖥️ <a href="https://t.me/ForSystemAnalyst" target="_blank">Канал о системном анализе</a></div>
+                <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank" rel="noopener noreferrer">GitHub Profile</a></div>
+                <div class="contact-item">*️⃣ <a href="https://vk.ru/mkrukov" target="_blank" rel="noopener noreferrer"> Страница в VK</a></div>
+                <div class="contact-item">📱 <a href="https://t.me/MikhailKryukov" target="_blank" rel="noopener noreferrer">Страница в Telegram</a></div>
+                <div class="contact-item">🖥️ <a href="https://t.me/ForSystemAnalyst" target="_blank" rel="noopener noreferrer">Канал о системном анализе</a></div>
             </div>
 
             <div class="skills-section">
@@ -510,10 +529,10 @@
                 <div class="contact-item">📍 Moscow, Russia</div>
                 <div class="contact-item">📞 <a href="tel:+79651132447">+7 (965) 113-24-47</a></div>
                 <div class="contact-item">✉️ <a href="mailto:michail.krjukov@gmail.com">michail.krjukov@gmail.com</a></div>
-                <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank">GitHub Profile</a></div>
-                <div class="contact-item">*️⃣ <a href="https://vk.ru/mkrukov" target="_blank">VK Profile</a></div>
-                <div class="contact-item">📱 <a href="https://t.me/MikhailKryukov" target="_blank">Telegram Profile</a></div>
-                <div class="contact-item">🖥️ <a href="https://t.me/ForSystemAnalyst" target="_blank">System Analysis Channel</a></div>
+                <div class="contact-item">💻 <a href="https://github.com/KryukovMikhail" target="_blank" rel="noopener noreferrer">GitHub Profile</a></div>
+                <div class="contact-item">*️⃣ <a href="https://vk.ru/mkrukov" target="_blank" rel="noopener noreferrer">VK Profile</a></div>
+                <div class="contact-item">📱 <a href="https://t.me/MikhailKryukov" target="_blank" rel="noopener noreferrer">Telegram Profile</a></div>
+                <div class="contact-item">🖥️ <a href="https://t.me/ForSystemAnalyst" target="_blank" rel="noopener noreferrer">System Analysis Channel</a></div>
             </div>
 
             <div class="skills-section">
@@ -704,19 +723,46 @@
 </div>
 
 <script>
-    function switchLang(lang) {
-        if (lang === 'en') {
-            document.getElementById('content-ru').style.display = 'none';
-            document.getElementById('content-en').style.display = 'flex';
-            document.getElementById('switch-ru').classList.remove('active-lang');
-            document.getElementById('switch-en').classList.add('active-lang');
-        } else {
-            document.getElementById('content-ru').style.display = 'flex';
-            document.getElementById('content-en').style.display = 'none';
-            document.getElementById('switch-ru').classList.add('active-lang');
-            document.getElementById('switch-en').classList.remove('active-lang');
+    var TITLES = {
+        ru: 'Михаил Крюков — Системный аналитик',
+        en: 'Mikhail Kryukov — System Analyst'
+    };
+
+    function switchLang(lang, fromInit) {
+        if (lang !== 'en') lang = 'ru';
+        var isEn = lang === 'en';
+
+        document.getElementById('content-ru').style.display = isEn ? 'none' : 'flex';
+        document.getElementById('content-en').style.display = isEn ? 'flex' : 'none';
+
+        var ru = document.getElementById('switch-ru');
+        var en = document.getElementById('switch-en');
+        ru.classList.toggle('active-lang', !isEn);
+        en.classList.toggle('active-lang', isEn);
+        ru.setAttribute('aria-pressed', String(!isEn));
+        en.setAttribute('aria-pressed', String(isEn));
+
+        // Язык страницы для скринридеров и поисковиков
+        document.documentElement.lang = lang;
+        document.title = TITLES[lang];
+
+        // Запоминаем выбор
+        try { localStorage.setItem('lang', lang); } catch (e) {}
+
+        // Ссылка вида kryukovmikhail.github.io/#en сразу открывает английскую версию
+        if (!fromInit && history.replaceState) {
+            history.replaceState(null, '', isEn ? '#en' : location.pathname + location.search);
         }
     }
+
+    // Начальный язык: #en/#ru в адресе → сохранённый выбор → русский
+    (function () {
+        var hash = location.hash.replace('#', '').toLowerCase();
+        var saved = null;
+        try { saved = localStorage.getItem('lang'); } catch (e) {}
+        var lang = (hash === 'en' || hash === 'ru') ? hash : (saved || 'ru');
+        switchLang(lang, true);
+    })();
 </script>
 
 </body>
