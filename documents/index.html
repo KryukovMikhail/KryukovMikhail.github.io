@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Документы — Михаил Крюков</title>
+<link rel="icon" href="../favicon.ico">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a;
+  --bg-2: #111c33;
+  --surface: #1e293b;
+  --surface-2: #243247;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-strong: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-ink: #0c1a2b;
+  --danger: #f87171;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --mark: rgba(56, 189, 248, .28);
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, 'Cascadia Code', 'JetBrains Mono', Consolas, 'Liberation Mono', monospace;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f8fafc; --bg-2: #f1f5f9; --surface: #ffffff; --surface-2: #f1f5f9;
+    --border: #cbd5e1; --text: #1e293b; --text-strong: #0f172a; --muted: #64748b;
+    --accent: #0284c7; --accent-ink: #ffffff; --danger: #dc2626; --ok: #16a34a; --warn: #b45309;
+    --mark: rgba(2, 132, 199, .2); --shadow: 0 10px 30px rgba(15,23,42,.12);
+  }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 var(--font); }
+button, input, textarea { font: inherit; color: inherit; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface); cursor: pointer; white-space: nowrap; font-size: 14px; }
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: .5; cursor: default; border-color: var(--border); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.danger { color: var(--danger); }
+.btn.danger:hover { border-color: var(--danger); }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.ghost:hover { background: var(--surface); border-color: var(--border); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.icon-btn { width: 34px; padding: 0; justify-content: center; }
+.input { height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-2); width: 100%; }
+.input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+
+/* ---------- login ---------- */
+.login { min-height: 100%; display: grid; place-items: center; padding: 24px 16px; }
+.login-card { width: min(520px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--shadow); }
+.login-card h1 { margin: 0 0 4px; font-size: 24px; color: var(--text-strong); }
+.login-card p { color: var(--muted); margin: 0 0 18px; }
+.login-card ol { padding-left: 20px; margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+.login-card ol li { margin: 4px 0; }
+.login-card ol b { color: var(--text); font-weight: 600; }
+.login-row { display: flex; gap: 8px; }
+.login-opts { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted); font-size: 14px; }
+.login-err { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 1em; }
+
+/* ---------- app shell ---------- */
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+.topbar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--bg-2); }
+.brand { font-weight: 700; color: var(--text-strong); font-size: 17px; text-decoration: none; }
+.brand span { color: var(--accent); }
+.repo-badge { font-size: 12px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
+.spacer { flex: 1; }
+.body { display: grid; grid-template-columns: 290px 1fr; min-height: 0; }
+.sidebar { border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; background: var(--bg-2); }
+.side-head { padding: 12px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border); }
+.file-list { overflow: auto; padding: 8px; flex: 1; }
+.folder { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 10px 4px; }
+.file { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 7px 10px; border-radius: 8px;
+  border: 0; background: transparent; cursor: pointer; color: var(--text); }
+.file:hover { background: var(--surface); }
+.file.active { background: var(--surface-2); color: var(--text-strong); box-shadow: inset 3px 0 0 var(--accent); }
+.file svg { width: 16px; height: 16px; flex: none; color: var(--muted); }
+.file .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); margin-left: auto; flex: none; }
+.side-foot { padding: 10px 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+.empty-list { color: var(--muted); padding: 16px 10px; font-size: 14px; }
+
+.main { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.doc-head { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.doc-title { min-width: 0; flex: 1; }
+.doc-title h2 { margin: 0; font-size: 18px; color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doc-meta { font-size: 12px; color: var(--muted); }
+.doc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.status { font-size: 13px; color: var(--muted); }
+.status.dirty { color: var(--warn); }
+.status.ok { color: var(--ok); }
+.status.err { color: var(--danger); }
+
+.banner { margin: 12px 20px 0; padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent);
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+.banner.err { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.banner .spacer { min-width: 8px; }
+
+/* view mode */
+.viewer { flex: 1; overflow: auto; }
+.view-tools { position: sticky; top: 0; z-index: 2; background: var(--bg); border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; flex-direction: column; gap: 8px; }
+.find-row { display: flex; gap: 8px; align-items: center; max-width: 880px; }
+.find-row .input { max-width: 380px; }
+.find-count { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.toc { display: flex; flex-wrap: wrap; gap: 4px; max-width: 880px; }
+.toc a { font-size: 13px; text-decoration: none; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 1px 8px; min-width: 28px; text-align: center; }
+.toc a:hover { color: var(--accent); border-color: var(--accent); }
+
+.md { max-width: 880px; padding: 20px 20px 80px; overflow-wrap: anywhere; }
+.md h1 { font-size: 28px; color: var(--text-strong); margin: 0 0 12px; line-height: 1.25; }
+.md h2 { font-size: 21px; color: var(--accent); margin: 28px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); scroll-margin-top: 110px; }
+.md h3 { font-size: 17px; color: var(--text-strong); margin: 20px 0 6px; scroll-margin-top: 110px; }
+.md p { margin: 8px 0; }
+.md ul, .md ol { padding-left: 22px; margin: 6px 0; }
+.md li { margin: 4px 0; }
+.md strong { color: var(--text-strong); }
+.md code { font-family: var(--mono); font-size: .9em; background: var(--surface); padding: 1px 5px; border-radius: 5px; }
+.md pre { background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); overflow: auto; }
+.md pre code { background: none; padding: 0; }
+.md blockquote { margin: 10px 0; padding: 4px 14px; border-left: 3px solid var(--accent); color: var(--muted); }
+.md table { border-collapse: collapse; display: block; overflow-x: auto; max-width: 100%; }
+.md th, .md td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+.md th { background: var(--surface); }
+.md hr { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+.md img { max-width: 100%; }
+.md .is-hidden { display: none; }
+::highlight(find) { background: var(--mark); color: var(--text-strong); }
+
+/* edit mode */
+.editor { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+.editor textarea { width: 100%; height: 100%; resize: none; border: 0; border-right: 1px solid var(--border); padding: 16px 20px;
+  background: var(--bg-2); font: 14px/1.6 var(--mono); tab-size: 2; }
+.editor .preview { overflow: auto; }
+.edit-tabs { display: none; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.edit-tabs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.welcome { padding: 48px 24px; color: var(--muted); max-width: 560px; }
+.welcome h2 { color: var(--text-strong); margin-top: 0; }
+.loading { padding: 24px; color: var(--muted); }
+
+/* modal */
+.modal-back { position: fixed; inset: 0; background: rgba(2,6,23,.6); display: grid; place-items: center; padding: 16px; z-index: 50; }
+.modal { width: min(460px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+.modal h3 { margin: 0 0 8px; color: var(--text-strong); }
+.modal p { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+.modal .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.modal .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.modal .err { font-size: 13px; color: var(--danger); margin-top: 8px; min-height: 1em; }
+
+.toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border);
+  padding: 10px 16px; border-radius: 10px; box-shadow: var(--shadow); font-size: 14px; z-index: 60; max-width: calc(100% - 32px); }
+
+.menu-btn { display: none; }
+.scrim { display: none; }
+
+@media (max-width: 1000px) {
+  .editor { grid-template-columns: 1fr; }
+  .editor textarea { border-right: 0; }
+  .edit-tabs { display: flex; }
+  .editor[data-tab="write"] .preview { display: none; }
+  .editor[data-tab="preview"] textarea { display: none; }
+}
+@media (max-width: 760px) {
+  .body { grid-template-columns: 1fr; }
+  .menu-btn { display: inline-flex; }
+  .sidebar { position: fixed; z-index: 40; top: 0; bottom: 0; left: 0; width: min(300px, 86vw); transform: translateX(-100%); transition: transform .2s; box-shadow: var(--shadow); }
+  .sidebar.open { transform: none; }
+  .scrim.open { display: block; position: fixed; inset: 0; background: rgba(2,6,23,.5); z-index: 39; }
+  .repo-badge { display: none; }
+  .topbar { padding: 8px 12px; }
+  .doc-head { padding: 10px 16px; }
+  .md { padding: 16px 16px 80px; }
+  .view-tools { padding: 10px 16px; }
+  .toc { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .toc a { flex: none; }
+  .banner { margin: 10px 16px 0; }
+  .btn .lbl { display: none; }
+  .btn { padding: 0 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section class="login" id="login" hidden>
+  <form class="login-card" id="loginForm" autocomplete="off">
+    <h1>Документы</h1>
+    <p>Просмотр и редактирование документов из приватного репозитория <b>KryukovMikhail/documents</b>.</p>
+    <ol>
+      <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">создание fine-grained токена</a> на GitHub.</li>
+      <li><b>Repository access</b> → Only select repositories → <b>documents</b>.</li>
+      <li><b>Permissions</b> → Repository → <b>Contents: Read and write</b>.</li>
+      <li>Скопируйте токен и вставьте ниже.</li>
+    </ol>
+    <div class="login-row">
+      <input class="input" id="tokenInput" type="password" placeholder="github_pat_…" spellcheck="false" required>
+      <button class="btn primary" type="submit" id="loginBtn">Войти</button>
+    </div>
+    <label class="login-opts"><input type="checkbox" id="remember" checked> Запомнить на этом устройстве</label>
+    <div class="login-err" id="loginErr"></div>
+  </form>
+</section>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app" hidden>
+  <header class="topbar">
+    <button class="btn ghost icon-btn menu-btn" id="menuBtn" aria-label="Список документов">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a class="brand" href="#/">Доку<span>менты</span></a>
+    <span class="repo-badge" id="repoBadge">KryukovMikhail/documents</span>
+    <div class="spacer"></div>
+    <button class="btn" id="newBtn" title="Новый документ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><span class="lbl">Новый</span>
+    </button>
+    <button class="btn ghost icon-btn" id="logoutBtn" title="Выйти">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    </button>
+  </header>
+
+  <div class="body">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-head">
+        <input class="input" id="fileFilter" placeholder="Найти документ…" spellcheck="false">
+      </div>
+      <nav class="file-list" id="fileList"><div class="loading">Загружаю список…</div></nav>
+      <div class="side-foot"><button class="btn ghost" id="refreshBtn" style="height:28px;padding:0 8px;font-size:12px">↻ Обновить список</button></div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <main class="main" id="main">
+      <div class="welcome" id="welcome">
+        <h2>Выберите документ</h2>
+        <p>Слева — все документы из репозитория. Откройте любой, чтобы прочитать, или нажмите «Редактировать», чтобы изменить. Сохранение создаёт коммит в репозитории.</p>
+        <p>Чтобы добавить документ, нажмите «Новый».</p>
+      </div>
+
+      <section id="docView" hidden style="display:flex;flex-direction:column;min-height:0;flex:1">
+        <div class="doc-head">
+          <div class="doc-title">
+            <h2 id="docTitle"></h2>
+            <div class="doc-meta" id="docMeta"></div>
+          </div>
+          <span class="status" id="status"></span>
+          <div class="doc-actions" id="viewActions">
+            <button class="btn primary" id="editBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span class="lbl">Редактировать</span></button>
+            <a class="btn ghost icon-btn" id="ghLink" target="_blank" rel="noopener" title="Открыть на GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg></a>
+            <button class="btn ghost icon-btn danger" id="deleteBtn" title="Удалить документ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+          </div>
+          <div class="doc-actions" id="editActions" hidden>
+            <button class="btn" id="cancelBtn">Отмена</button>
+            <button class="btn primary" id="saveBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Сохранить</button>
+          </div>
+        </div>
+        <div id="bannerSlot"></div>
+
+        <div class="viewer" id="viewer">
+          <div class="view-tools" id="viewTools">
+            <div class="find-row">
+              <input class="input" id="findInput" placeholder="Поиск по документу…" spellcheck="false">
+              <span class="find-count" id="findCount"></span>
+            </div>
+            <nav class="toc" id="toc"></nav>
+          </div>
+          <article class="md" id="rendered"></article>
+        </div>
+
+        <div id="editWrap" hidden style="display:flex;flex-direction:column;min-height:0;flex:1">
+          <div class="edit-tabs">
+            <button class="btn" data-tab="write" aria-pressed="true">Текст</button>
+            <button class="btn" data-tab="preview" aria-pressed="false">Просмотр</button>
+          </div>
+          <div class="editor" id="editor" data-tab="write">
+            <textarea id="source" spellcheck="true" lang="ru"></textarea>
+            <div class="preview"><article class="md" id="preview"></article></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div id="modalSlot"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+  'use strict';
+  const OWNER = 'KryukovMikhail';
+  const REPO = 'documents';
+  const API = 'https://api.github.com';
+  const TOKEN_KEY = 'docs-gh-token';
+  const DRAFT_PREFIX = 'docs-draft:';
+  const TEXT_EXT = /\.(md|markdown|txt|text|csv|tsv|json|ya?ml|xml|html?|css|js|ts|py|sql|ini|cfg|conf|log)$/i;
+  const BINARY_EXT = /\.(png|jpe?g|gif|webp|svg|ico|pdf|docx?|xlsx?|pptx?|zip|7z|rar|gz|mp3|mp4|mov|woff2?|ttf|otf)$/i;
+
+  const $ = (id) => document.getElementById(id);
+  const state = { token: null, branch: 'main', files: [], current: null, editing: false, dirty: false };
+
+  /* ---------- storage (best effort) ---------- */
+  const store = {
+    get(k, s = localStorage) { try { return s.getItem(k); } catch { return null; } },
+    set(k, v, s = localStorage) { try { s.setItem(k, v); } catch {} },
+    del(k) { try { localStorage.removeItem(k); } catch {} try { sessionStorage.removeItem(k); } catch {} },
+  };
+
+  /* ---------- utf-8 base64 ---------- */
+  function b64encode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  function b64decode(b64) {
+    const bin = atob(b64.replace(/\s/g, ''));
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  const encPath = (p) => p.split('/').map(encodeURIComponent).join('/');
+
+  /* ---------- GitHub API ---------- */
+  async function gh(path, opts = {}) {
+    const res = await fetch(API + path, {
+      ...opts,
+      headers: {
+        Authorization: 'Bearer ' + state.token,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(opts.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(opts.headers || {}),
+      },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      const err = new Error('HTTP ' + res.status);
+      err.status = res.status;
+      try { err.body = await res.json(); } catch {}
+      throw err;
+    }
+    return res.status === 204 ? null : res.json();
+  }
+  function explain(err) {
+    if (!err || !err.status) return 'Нет связи с GitHub. Проверьте интернет.';
+    if (err.status === 401) return 'Токен недействителен или истёк. Войдите заново.';
+    if (err.status === 403) return 'Недостаточно прав у токена (нужно Contents: Read and write) или превышен лимит запросов.';
+    if (err.status === 404) return 'Не найдено. Возможно, у токена нет доступа к репозиторию documents.';
+    if (err.status === 409) return 'Документ изменился на GitHub после того, как вы его открыли.';
+    if (err.status === 422) return (err.body && err.body.message) || 'GitHub отклонил запрос.';
+    return 'Ошибка GitHub: ' + err.status + (err.body && err.body.message ? ' — ' + err.body.message : '');
+  }
+
+  /* ---------- toast / modal ---------- */
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 2800);
+  }
+  function modal({ title, text, input, placeholder, hint, okText = 'OK', danger = false, onOk }) {
+    const slot = $('modalSlot');
+    slot.innerHTML = '';
+    const back = document.createElement('div'); back.className = 'modal-back';
+    const box = document.createElement('div'); box.className = 'modal'; box.setAttribute('role', 'dialog');
+    const h = document.createElement('h3'); h.textContent = title; box.append(h);
+    if (text) { const p = document.createElement('p'); p.textContent = text; box.append(p); }
+    let inp;
+    if (input !== undefined) {
+      inp = document.createElement('input'); inp.className = 'input'; inp.value = input; inp.placeholder = placeholder || ''; inp.spellcheck = false;
+      box.append(inp);
+      if (hint) { const hh = document.createElement('div'); hh.className = 'hint'; hh.textContent = hint; box.append(hh); }
+    }
+    const err = document.createElement('div'); err.className = 'err'; box.append(err);
+    const row = document.createElement('div'); row.className = 'row';
+    const cancel = document.createElement('button'); cancel.className = 'btn'; cancel.textContent = 'Отмена';
+    const ok = document.createElement('button'); ok.className = 'btn ' + (danger ? 'danger' : 'primary'); ok.textContent = okText;
+    row.append(cancel, ok); box.append(row); back.append(box); slot.append(back);
+    const close = () => { slot.innerHTML = ''; document.removeEventListener('keydown', onKey); };
+    const submit = async () => {
+      ok.disabled = true; err.textContent = '';
+      try { const r = await onOk(inp ? inp.value : undefined); if (r === false) { ok.disabled = false; return; } close(); }
+      catch (e) { err.textContent = e.message || explain(e); ok.disabled = false; }
+    };
+    const onKey = (e) => { if (e.key === 'Escape') close(); if (e.key === 'Enter' && inp) submit(); };
+    document.addEventListener('keydown', onKey);
+    cancel.onclick = close; ok.onclick = submit;
+    back.addEventListener('mousedown', (e) => { if (e.target === back) close(); });
+    (inp || ok).focus(); if (inp) inp.select();
+    return { setError: (m) => (err.textContent = m) };
+  }
+
+  /* ---------- markdown ---------- */
+  function renderMarkdown(md, target) {
+    const html = window.marked ? marked.parse(md, { gfm: true, breaks: false }) : '<pre>' + md.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])) + '</pre>';
+    target.innerHTML = window.DOMPurify ? DOMPurify.sanitize(html) : html;
+    const used = {};
+    target.querySelectorAll('h1,h2,h3,h4').forEach((h) => {
+      let slug = h.textContent.trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'section';
+      if (used[slug]) slug += '-' + ++used[slug]; else used[slug] = 1;
+      h.id = slug;
+    });
+    target.querySelectorAll('a[href^="http"]').forEach((a) => { a.target = '_blank'; a.rel = 'noopener'; });
+  }
+  function buildToc() {
+    const toc = $('toc'); toc.innerHTML = '';
+    let heads = [...$('rendered').querySelectorAll('h2')];
+    if (heads.length < 2) heads = [...$('rendered').querySelectorAll('h3')];
+    if (heads.length < 2) { toc.hidden = true; return; }
+    toc.hidden = false;
+    heads.forEach((h) => {
+      const a = document.createElement('a'); a.href = '#'; a.textContent = h.textContent.trim();
+      a.onclick = (e) => { e.preventDefault(); h.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+      toc.append(a);
+    });
+  }
+
+  /* ---------- find in document ---------- */
+  function applyFind() {
+    const q = $('findInput').value.trim().toLowerCase();
+    const root = $('rendered');
+    const items = root.querySelectorAll('li, p, tr, blockquote, pre');
+    root.querySelectorAll('.is-hidden').forEach((el) => el.classList.remove('is-hidden'));
+    if (CSS.highlights) CSS.highlights.delete('find');
+    if (!q) { $('findCount').textContent = ''; return; }
+    let count = 0;
+    items.forEach((el) => {
+      if (el.closest('li') && el.closest('li') !== el) return; // nested inside li — handled by parent
+      const hit = el.textContent.toLowerCase().includes(q);
+      if (!hit) el.classList.add('is-hidden'); else count++;
+    });
+    // hide headings whose section has no visible content
+    const blocks = [...root.children];
+    let heading = null, any = false;
+    const flush = () => { if (heading) heading.classList.toggle('is-hidden', !any); };
+    blocks.forEach((el) => {
+      if (/^H[1-4]$/.test(el.tagName)) {
+        flush(); heading = el; any = el.textContent.toLowerCase().includes(q);
+        if (el.tagName === 'H1') { heading = null; }
+        return;
+      }
+      if (el.matches('ul,ol,table')) {
+        const visible = el.querySelector(':scope > li:not(.is-hidden), tr:not(.is-hidden) td');
+        el.classList.toggle('is-hidden', !visible);
+        if (visible) any = true;
+      } else if (el.matches('hr')) {
+        el.classList.add('is-hidden');
+      } else if (!el.classList.contains('is-hidden')) any = true;
+    });
+    flush();
+    $('findCount').textContent = count ? 'Найдено: ' + count : 'Ничего не найдено';
+    if (CSS.highlights && window.Highlight) {
+      const ranges = [];
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      let n;
+      while ((n = walker.nextNode())) {
+        if (n.parentElement.closest('.is-hidden')) continue;
+        const txt = n.nodeValue.toLowerCase();
+        let i = txt.indexOf(q);
+        while (i !== -1 && ranges.length < 2000) {
+          const r = new Range(); r.setStart(n, i); r.setEnd(n, i + q.length); ranges.push(r);
+          i = txt.indexOf(q, i + q.length);
+        }
+      }
+      CSS.highlights.set('find', new Highlight(...ranges));
+    }
+  }
+
+  /* ---------- drafts ---------- */
+  const draftKey = (p) => DRAFT_PREFIX + p;
+  function readDraft(p) { try { return JSON.parse(store.get(draftKey(p)) || 'null'); } catch { return null; } }
+  function writeDraft(p, text) { store.set(draftKey(p), JSON.stringify({ text, sha: state.current && state.current.sha, ts: Date.now() })); }
+  function dropDraft(p) { store.del(draftKey(p)); }
+
+  /* ---------- file list ---------- */
+  const isText = (p) => TEXT_EXT.test(p) || (!BINARY_EXT.test(p) && !/\.[^/]+$/.test(p));
+  async function loadTree() {
+    const repo = await gh(`/repos/${OWNER}/${REPO}`);
+    state.branch = repo.default_branch || 'main';
+    let tree = [];
+    try {
+      const t = await gh(`/repos/${OWNER}/${REPO}/git/trees/${encodeURIComponent(state.branch)}?recursive=1`);
+      tree = t.tree || [];
+    } catch (e) { if (e.status !== 404 && e.status !== 409) throw e; } // empty repo
+    state.files = tree.filter((x) => x.type === 'blob' && !x.path.startsWith('.')).map((x) => ({ path: x.path, sha: x.sha, size: x.size }));
+    renderFileList();
+  }
+  function displayName(p) { return p.split('/').pop().replace(/\.(md|markdown)$/i, ''); }
+  function renderFileList() {
+    const list = $('fileList');
+    const q = $('fileFilter').value.trim().toLowerCase();
+    list.innerHTML = '';
+    const files = state.files
+      .filter((f) => !q || f.path.toLowerCase().includes(q))
+      .sort((a, b) => {
+        const da = a.path.includes('/') ? a.path.slice(0, a.path.lastIndexOf('/')) : '';
+        const db = b.path.includes('/') ? b.path.slice(0, b.path.lastIndexOf('/')) : '';
+        if (da !== db) return da.localeCompare(db, 'ru');
+        const ra = /^readme/i.test(displayName(a.path)) ? 1 : 0, rb = /^readme/i.test(displayName(b.path)) ? 1 : 0;
+        if (ra !== rb) return ra - rb;
+        return displayName(a.path).localeCompare(displayName(b.path), 'ru');
+      });
+    if (!files.length) {
+      const d = document.createElement('div'); d.className = 'empty-list';
+      d.textContent = q ? 'Ничего не найдено.' : 'В репозитории пока нет документов.';
+      list.append(d); return;
+    }
+    let folder = null;
+    files.forEach((f) => {
+      const dir = f.path.includes('/') ? f.path.slice(0, f.path.lastIndexOf('/')) : '';
+      if (dir !== folder) {
+        folder = dir;
+        if (dir) { const h = document.createElement('div'); h.className = 'folder'; h.textContent = dir; list.append(h); }
+      }
+      const b = document.createElement('button'); b.className = 'file'; b.dataset.path = f.path;
+      b.title = f.path;
+      if (state.current && state.current.path === f.path) b.classList.add('active');
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span class="name"></span>';
+      b.querySelector('.name').textContent = displayName(f.path);
+      if (readDraft(f.path)) { const dot = document.createElement('span'); dot.className = 'dot'; dot.title = 'Есть несохранённый черновик'; b.append(dot); }
+      if (!isText(f.path)) b.style.opacity = '.55';
+      b.onclick = () => navigate(f.path);
+      list.append(b);
+    });
+  }
+
+  /* ---------- routing ---------- */
+  function currentRoute() {
+    const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+    return h || null;
+  }
+  function navigate(path) {
+    if (state.editing && state.dirty && !confirmLeave()) return;
+    closeSidebar();
+    location.hash = '#/' + encPath(path);
+  }
+  function confirmLeave() {
+    // draft is kept automatically, so leaving is safe — just notify
+    toast('Черновик сохранён в браузере — можно вернуться к нему позже');
+    return true;
+  }
+  async function onRoute() {
+    const path = currentRoute();
+    exitEdit(true);
+    if (!path) { showWelcome(); return; }
+    await openDoc(path);
+  }
+
+  /* ---------- open / view ---------- */
+  function showWelcome() {
+    state.current = null;
+    $('welcome').hidden = false; $('docView').hidden = true;
+    document.title = 'Документы — Михаил Крюков';
+    renderFileList();
+  }
+  function setStatus(text, cls = '') { const s = $('status'); s.textContent = text; s.className = 'status ' + cls; }
+  function fmtDate(iso) {
+    try { return new Date(iso).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch { return iso; }
+  }
+  async function openDoc(path) {
+    $('welcome').hidden = true; $('docView').hidden = false;
+    $('docTitle').textContent = displayName(path);
+    $('docMeta').textContent = path;
+    $('rendered').innerHTML = '<div class="loading">Загружаю…</div>';
+    $('toc').innerHTML = ''; $('findInput').value = ''; $('findCount').textContent = '';
+    $('bannerSlot').innerHTML = '';
+    setStatus('');
+    $('ghLink').href = `https://github.com/${OWNER}/${REPO}/blob/${state.branch}/${encPath(path)}`;
+    state.current = { path, sha: null, text: '' };
+    renderFileList();
+    try {
+      const data = await gh(`/repos/${OWNER}/${REPO}/contents/${encPath(path)}?ref=${encodeURIComponent(state.branch)}`);
+      let text;
+      if (data.encoding === 'base64' && data.content) text = b64decode(data.content);
+      else { const blob = await gh(`/repos/${OWNER}/${REPO}/git/blobs/${data.sha}`); text = b64decode(blob.content); }
+      if (!state.current || state.current.path !== path) return;
+      state.current = { path, sha: data.sha, text };
+      showRendered();
+      loadMeta(path);
+      const draft = readDraft(path);
+      if (draft && draft.text !== text) showDraftBanner(draft);
+      else if (draft) dropDraft(path);
+    } catch (e) {
+      $('rendered').innerHTML = '';
+      banner(explain(e), true);
+      if (e.status === 401) logout();
+    }
+  }
+  function showRendered() {
+    const { path, text } = state.current;
+    const h1 = text.match(/^#\s+(.+)$/m);
+    const title = h1 ? h1[1].trim() : displayName(path);
+    $('docTitle').textContent = title;
+    document.title = title + ' — Документы';
+    if (/\.(md|markdown)$/i.test(path) || !/\.[^/]+$/.test(path)) renderMarkdown(text, $('rendered'));
+    else { const pre = document.createElement('pre'); pre.textContent = text; $('rendered').innerHTML = ''; $('rendered').append(pre); }
+    buildToc();
+    $('editBtn').disabled = !isText(path);
+  }
+  async function loadMeta(path) {
+    try {
+      const commits = await gh(`/repos/${OWNER}/${REPO}/commits?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(state.branch)}&per_page=1`);
+      if (commits[0] && state.current && state.current.path === path) {
+        $('docMeta').textContent = path + ' · изменён ' + fmtDate(commits[0].commit.committer.date);
+      }
+    } catch {}
+  }
+  function banner(text, isErr, actions = []) {
+    const slot = $('bannerSlot'); slot.innerHTML = '';
+    const b = document.createElement('div'); b.className = 'banner' + (isErr ? ' err' : '');
+    const s = document.createElement('span'); s.textContent = text; b.append(s);
+    const sp = document.createElement('span'); sp.className = 'spacer'; b.append(sp);
+    actions.forEach(([label, fn, primary]) => { const btn = document.createElement('button'); btn.className = 'btn' + (primary ? ' primary' : ''); btn.textContent = label; btn.onclick = fn; b.append(btn); });
+    slot.append(b);
+  }
+  function showDraftBanner(draft) {
+    banner('Есть несохранённый черновик от ' + fmtDate(draft.ts) + '.', false, [
+      ['Продолжить черновик', () => { $('bannerSlot').innerHTML = ''; enterEdit(draft.text); }, true],
+      ['Удалить черновик', () => { dropDraft(state.current.path); $('bannerSlot').innerHTML = ''; renderFileList(); }],
+    ]);
+  }
+
+  /* ---------- edit ---------- */
+  let previewTimer;
+  function enterEdit(text) {
+    if (!state.current || state.current.sha === null) return;
+    state.editing = true;
+    $('viewer').hidden = true; $('editWrap').hidden = false;
+    $('viewActions').hidden = true; $('editActions').hidden = false;
+    const ta = $('source');
+    ta.value = text !== undefined ? text : state.current.text;
+    state.dirty = ta.value !== state.current.text;
+    updateDirty();
+    renderMarkdown(ta.value, $('preview'));
+    ta.focus();
+  }
+  function exitEdit(silent) {
+    state.editing = false; state.dirty = false;
+    $('viewer').hidden = false; $('editWrap').hidden = true;
+    $('viewActions').hidden = false; $('editActions').hidden = true;
+    if (!silent) setStatus('');
+  }
+  function updateDirty() {
+    $('saveBtn').disabled = !state.dirty;
+    setStatus(state.dirty ? 'Есть несохранённые изменения' : 'Без изменений', state.dirty ? 'dirty' : '');
+  }
+  function onSourceInput() {
+    const v = $('source').value;
+    state.dirty = v !== state.current.text;
+    updateDirty();
+    if (state.dirty) writeDraft(state.current.path, v); else dropDraft(state.current.path);
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => renderMarkdown(v, $('preview')), 250);
+  }
+  async function save() {
+    if (!state.editing || !state.dirty) return;
+    const { path, sha } = state.current;
+    const text = $('source').value;
+    $('saveBtn').disabled = true; setStatus('Сохраняю…');
+    try {
+      const res = await gh(`/repos/${OWNER}/${REPO}/contents/${encPath(path)}`, {
+        method: 'PUT',
+        body: JSON.stringify({ message: 'Update ' + path + ' (documents site)', content: b64encode(text), sha, branch: state.branch }),
+      });
+      state.current = { path, sha: res.content.sha, text };
+      const f = state.files.find((x) => x.path === path); if (f) f.sha = res.content.sha;
+      dropDraft(path);
+      exitEdit(true);
+      showRendered();
+      setStatus('Сохранено', 'ok');
+      $('docMeta').textContent = path + ' · изменён ' + fmtDate(new Date().toISOString());
+      renderFileList();
+      toast('Сохранено — коммит создан');
+    } catch (e) {
+      $('saveBtn').disabled = false;
+      if (e.status === 409 || (e.status === 422 && /sha/i.test((e.body && e.body.message) || ''))) {
+        setStatus('Конфликт', 'err');
+        banner('Документ изменили на GitHub, пока вы редактировали. Ваш текст сохранён как черновик.', true, [
+          ['Открыть актуальную версию', () => { writeDraft(path, text); openDoc(path); }, true],
+        ]);
+      } else {
+        setStatus('Не сохранено', 'err');
+        banner(explain(e), true);
+      }
+    }
+  }
+  function cancelEdit() {
+    if (state.dirty) {
+      modal({
+        title: 'Отменить изменения?', text: 'Несохранённые правки будут удалены.', okText: 'Отменить правки', danger: true,
+        onOk: () => { dropDraft(state.current.path); exitEdit(); renderFileList(); },
+      });
+    } else { exitEdit(); }
+  }
+
+  /* ---------- create / delete ---------- */
+  function newDoc() {
+    modal({
+      title: 'Новый документ', input: '', placeholder: 'например: notes/книги.md',
+      hint: 'Можно указать папку через «/». Расширение .md добавится само.', okText: 'Создать',
+      onOk: async (name) => {
+        let p = (name || '').trim().replace(/^\/+|\/+$/g, '').replace(/\s*\/\s*/g, '/');
+        if (!p) throw new Error('Введите название.');
+        if (/[\\:*?"<>|]/.test(p) || p.split('/').some((s) => !s || s === '.' || s === '..')) throw new Error('Недопустимые символы в названии.');
+        if (!/\.[a-z0-9]+$/i.test(p)) p += '.md';
+        if (state.files.some((f) => f.path.toLowerCase() === p.toLowerCase())) throw new Error('Такой документ уже есть.');
+        const title = displayName(p);
+        const res = await gh(`/repos/${OWNER}/${REPO}/contents/${encPath(p)}`, {
+          method: 'PUT',
+          body: JSON.stringify({ message: 'Create ' + p + ' (documents site)', content: b64encode('# ' + title + '\n\n'), branch: state.branch }),
+        });
+        state.files.push({ path: p, sha: res.content.sha, size: 0 });
+        location.hash = '#/' + encPath(p);
+        // open in edit mode once loaded
+        const wait = setInterval(() => { if (state.current && state.current.path === p && state.current.sha) { clearInterval(wait); enterEdit(); } }, 100);
+        setTimeout(() => clearInterval(wait), 10000);
+      },
+    });
+  }
+  function deleteDoc() {
+    if (!state.current || !state.current.sha) return;
+    const { path, sha } = state.current;
+    modal({
+      title: 'Удалить документ?', text: '«' + path + '» будет удалён из репозитория. Его можно будет восстановить из истории коммитов на GitHub.',
+      okText: 'Удалить', danger: true,
+      onOk: async () => {
+        await gh(`/repos/${OWNER}/${REPO}/contents/${encPath(path)}`, {
+          method: 'DELETE', body: JSON.stringify({ message: 'Delete ' + path + ' (documents site)', sha, branch: state.branch }),
+        });
+        state.files = state.files.filter((f) => f.path !== path);
+        dropDraft(path);
+        toast('Документ удалён');
+        location.hash = '#/';
+      },
+    });
+  }
+
+  /* ---------- sidebar (mobile) ---------- */
+  function openSidebar() { $('sidebar').classList.add('open'); $('scrim').classList.add('open'); }
+  function closeSidebar() { $('sidebar').classList.remove('open'); $('scrim').classList.remove('open'); }
+
+  /* ---------- auth ---------- */
+  function logout() {
+    store.del(TOKEN_KEY); state.token = null;
+    $('app').hidden = true; $('login').hidden = false; $('tokenInput').value = '';
+  }
+  async function start() {
+    $('login').hidden = true; $('app').hidden = false;
+    try { await loadTree(); }
+    catch (e) {
+      if (e.status === 401 || e.status === 404) { logout(); $('loginErr').textContent = explain(e); return; }
+      $('fileList').innerHTML = ''; const d = document.createElement('div'); d.className = 'empty-list'; d.textContent = explain(e); $('fileList').append(d);
+    }
+    onRoute();
+  }
+
+  /* ---------- wiring ---------- */
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tok = $('tokenInput').value.trim();
+    if (!tok) return;
+    $('loginBtn').disabled = true; $('loginErr').textContent = '';
+    state.token = tok;
+    try {
+      await gh(`/repos/${OWNER}/${REPO}`);
+      if ($('remember').checked) store.set(TOKEN_KEY, tok); else store.set(TOKEN_KEY, tok, sessionStorage);
+      await start();
+    } catch (err) {
+      state.token = null;
+      $('loginErr').textContent = explain(err);
+    } finally { $('loginBtn').disabled = false; }
+  });
+  $('logoutBtn').onclick = () => modal({ title: 'Выйти?', text: 'Токен будет удалён из этого браузера. Черновики останутся.', okText: 'Выйти', onOk: logout });
+  $('newBtn').onclick = newDoc;
+  $('refreshBtn').onclick = async () => { try { await loadTree(); toast('Список обновлён'); } catch (e) { toast(explain(e)); } };
+  $('fileFilter').addEventListener('input', renderFileList);
+  $('editBtn').onclick = () => enterEdit();
+  $('cancelBtn').onclick = cancelEdit;
+  $('saveBtn').onclick = save;
+  $('deleteBtn').onclick = deleteDoc;
+  $('source').addEventListener('input', onSourceInput);
+  $('source').addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') { e.preventDefault(); const t = e.target, s = t.selectionStart; t.setRangeText('  ', s, t.selectionEnd, 'end'); onSourceInput(); }
+  });
+  let findTimer;
+  $('findInput').addEventListener('input', () => { clearTimeout(findTimer); findTimer = setTimeout(applyFind, 120); });
+  $('menuBtn').onclick = openSidebar;
+  $('scrim').onclick = closeSidebar;
+  document.querySelectorAll('.edit-tabs button').forEach((b) => b.addEventListener('click', () => {
+    $('editor').dataset.tab = b.dataset.tab;
+    document.querySelectorAll('.edit-tabs button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    if (b.dataset.tab === 'preview') renderMarkdown($('source').value, $('preview'));
+  }));
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); if (state.editing) save(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f' && !state.editing && !$('docView').hidden) { e.preventDefault(); $('findInput').focus(); }
+    if (e.key === 'Escape' && document.activeElement === $('findInput')) { $('findInput').value = ''; applyFind(); }
+  });
+  window.addEventListener('hashchange', () => { if (state.token) onRoute(); });
+  window.addEventListener('beforeunload', (e) => { if (state.editing && state.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* ---------- boot ---------- */
+  state.token = store.get(TOKEN_KEY) || store.get(TOKEN_KEY, sessionStorage);
+  if (state.token) start(); else $('login').hidden = false;
+})();
+</script>
+</body>
+</html>
