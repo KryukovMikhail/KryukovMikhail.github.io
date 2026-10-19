@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Заметки — Михаил Крюков</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Заметки">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<style>
+:root {
+  --bg: #000000;
+  --bg-2: #0a0a0a;
+  --surface: #161616;
+  --surface-2: #222222;
+  --border: #2a2a2a;
+  --text: #e5e5e5;
+  --text-strong: #ffffff;
+  --muted: #a3a3a3;
+  --faint: #5c5c5c;
+  --accent: #38bdf8;
+  --accent-ink: #001018;
+  --danger: #f87171;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --vit: #fbbf24;
+  --gym: #4ade80;
+  --note: #c084fc;
+  --todo: #38bdf8;
+  --shadow: 0 10px 30px rgba(0,0,0,.6);
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 var(--font); -webkit-tap-highlight-color: transparent; }
+button, input, textarea, select { font: inherit; color: inherit; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+/* ---------- buttons / inputs ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface); cursor: pointer; white-space: nowrap; font-size: 14px; }
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: .5; cursor: default; border-color: var(--border); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.danger { color: var(--danger); }
+.btn.danger:hover { border-color: var(--danger); }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.ghost:hover { background: var(--surface); border-color: var(--border); }
+.btn.sm { height: 28px; padding: 0 9px; font-size: 13px; }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.icon-btn { width: 34px; padding: 0; }
+.input { height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-2); width: 100%; min-width: 0; }
+textarea.input { height: auto; min-height: 76px; padding: 8px 12px; resize: vertical; line-height: 1.5; }
+.input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+input[type=date].input { color-scheme: dark; }
+input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; margin: 0; flex: none; cursor: pointer; }
+
+/* ---------- login ---------- */
+.login { min-height: 100%; display: grid; place-items: center; padding: 24px 16px; }
+.login-card { width: min(540px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--shadow); }
+.login-card h1 { margin: 0 0 4px; font-size: 24px; color: var(--text-strong); }
+.login-card p { color: var(--muted); margin: 0 0 18px; }
+.login-card ol { padding-left: 20px; margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+.login-card ol li { margin: 4px 0; }
+.login-card ol b { color: var(--text); font-weight: 600; }
+.login-row { display: flex; gap: 8px; }
+.login-opts { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted); font-size: 14px; }
+.login-err { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 1em; }
+
+/* ---------- shell ---------- */
+.app { min-height: 100%; display: flex; flex-direction: column; }
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--bg-2); }
+.brand { font-weight: 700; color: var(--text-strong); font-size: 17px; text-decoration: none; }
+.tabs { display: flex; gap: 4px; margin-left: 8px; }
+.tab { height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid transparent; background: transparent; cursor: pointer; color: var(--muted); font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { background: var(--surface-2); color: var(--text-strong); border-color: var(--border); }
+.tab .count { font-size: 12px; background: var(--todo); color: var(--accent-ink); border-radius: 9px; padding: 0 6px; font-weight: 700; line-height: 18px; }
+.spacer { flex: 1; }
+.sync { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.sync.busy { color: var(--warn); }
+.sync.err { color: var(--danger); }
+.sync.ok { color: var(--ok); }
+.page { width: 100%; max-width: 1080px; margin: 0 auto; padding: 18px 16px 60px; }
+
+/* ---------- calendar ---------- */
+.cal-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.cal-head h2 { margin: 0 8px 0 0; font-size: 22px; color: var(--text-strong); text-transform: capitalize; min-width: 180px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-left: auto; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+.dot.gym { background: var(--gym); } .dot.vit { background: var(--vit); } .dot.note { background: var(--note); } .dot.tdo { background: var(--todo); }
+
+.weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.weekdays div { text-align: center; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 4px 0; }
+.weekdays div:nth-child(n+6) { color: #f0a0a0; }
+.cell { aspect-ratio: 1 / 1; min-width: 0; border: 1px solid var(--border); background: var(--surface); border-radius: 10px; padding: 7px 8px;
+  display: flex; flex-direction: column; text-align: left; cursor: pointer; overflow: hidden; position: relative; transition: border-color .12s, background .12s; }
+.cell:hover { border-color: var(--accent); background: var(--surface-2); }
+.cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cell.out { background: var(--bg-2); opacity: .45; }
+.cell.has { background: #141c22; }
+.cell.today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.cell .num { font-size: 14px; font-weight: 600; color: var(--text-strong); line-height: 1; display: flex; align-items: center; justify-content: space-between; }
+.cell.weekend .num { color: #f0a0a0; }
+.cell.today .num > b { background: var(--accent); color: var(--accent-ink); border-radius: 6px; padding: 2px 5px; margin: -2px -2px; }
+.cell .tcount { font-size: 11px; font-weight: 700; color: var(--accent-ink); background: var(--todo); border-radius: 8px; padding: 0 5px; line-height: 16px; }
+.cell .tcount.done { background: var(--surface-2); color: var(--muted); }
+.cell .weight { margin-top: auto; font-size: 17px; font-weight: 700; color: var(--text-strong); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cell .weight small { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 2px; }
+.cell .lines { font-size: 11.5px; color: var(--muted); line-height: 1.35; margin-top: 4px; overflow: hidden; }
+.cell .lines div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
+.cell .dots { display: flex; gap: 4px; margin-top: 5px; }
+.cell .plus { position: absolute; right: 8px; bottom: 6px; color: var(--faint); font-size: 18px; line-height: 1; opacity: 0; transition: opacity .12s; }
+.cell:hover .plus { opacity: 1; }
+.cell.has .plus { display: none; }
+
+/* summary */
+.summary { margin-top: 18px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)) ; gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.stat .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.stat .v { font-size: 22px; font-weight: 700; color: var(--text-strong); font-variant-numeric: tabular-nums; margin-top: 2px; }
+.stat .v small { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 4px; }
+.stat .v .down { color: var(--ok); } .stat .v .up { color: var(--warn); }
+.chart { margin-top: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.chart .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.chart svg { width: 100%; height: 150px; display: block; }
+.chart .empty { color: var(--muted); font-size: 14px; padding: 18px 0; }
+
+/* ---------- todos ---------- */
+.todo-add { display: grid; grid-template-columns: 1fr 170px auto; gap: 8px; margin-bottom: 16px; }
+.todo-filters { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.chipbtn { height: 30px; padding: 0 12px; border-radius: 15px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 13px; color: var(--muted); }
+.chipbtn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.group { margin-bottom: 18px; }
+.group h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.group.overdue h3 { color: var(--danger); }
+.todo { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid var(--border); background: var(--surface); border-radius: 9px; margin-bottom: 6px; }
+.todo .txt { flex: 1; min-width: 0; overflow-wrap: anywhere; cursor: text; }
+.todo.done .txt { text-decoration: line-through; color: var(--muted); }
+.todo .due { font-size: 12px; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; white-space: nowrap; cursor: pointer; background: transparent; }
+.todo .due:hover { border-color: var(--accent); color: var(--accent); }
+.todo .due.over { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
+.todo .del { opacity: .55; }
+.todo:hover .del { opacity: 1; }
+.todo-edit { flex: 1; }
+.empty-note { color: var(--muted); font-size: 14px; padding: 8px 2px; }
+
+/* ---------- day panel ---------- */
+.modal-back { position: fixed; inset: 0; background: rgba(0,0,0,.72); display: grid; place-items: center; padding: 16px; z-index: 50; }
+.modal { width: min(460px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+.modal h3 { margin: 0 0 8px; color: var(--text-strong); }
+.modal p { margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+.modal .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.modal .err { font-size: 13px; color: var(--danger); margin-top: 8px; min-height: 1em; }
+
+.day { width: min(620px, 100%); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.day-head { display: flex; align-items: center; gap: 6px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.day-head h3 { margin: 0; flex: 1; font-size: 18px; text-align: center; }
+.day-head h3 small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); }
+.day-body { overflow: auto; padding: 4px 18px 8px; }
+.sec { padding: 14px 0; border-bottom: 1px solid var(--border); }
+.sec:last-child { border-bottom: 0; }
+.sec-title { display: flex; align-items: center; gap: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+.sec-title .spacer { flex: 1; }
+.weight-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.weight-row .input { width: 120px; font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hint { font-size: 13px; color: var(--muted); }
+.hint .down { color: var(--ok); } .hint .up { color: var(--warn); }
+.wk { display: grid; grid-template-columns: 1fr 92px 34px; gap: 6px; margin-bottom: 6px; }
+.wk .note { grid-column: 1 / 3; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg-2); cursor: pointer; font-size: 14px; user-select: none; }
+.chip:hover { border-color: var(--vit); }
+.chip[aria-pressed="true"] { border-color: var(--vit); background: color-mix(in srgb, var(--vit) 16%, transparent); color: var(--text-strong); }
+.chip[aria-pressed="true"]::before { content: '✓'; color: var(--vit); font-weight: 700; }
+.chip .x { margin-left: 2px; color: var(--danger); font-weight: 700; }
+.chip.add { border-style: dashed; color: var(--muted); }
+.add-vit { display: flex; gap: 6px; margin-top: 8px; }
+.day-todos .todo { background: var(--bg-2); }
+.day-foot { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--bg-2); }
+.day-foot .spacer { flex: 1; }
+
+.toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border);
+  padding: 10px 16px; border-radius: 10px; box-shadow: var(--shadow); font-size: 14px; z-index: 60; max-width: calc(100% - 32px); }
+.loading { padding: 40px 0; color: var(--muted); text-align: center; }
+
+@media (max-width: 860px) {
+  .cell .lines { display: none; }
+  .summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 600px) {
+  .topbar { padding: 8px 10px; gap: 6px; flex-wrap: wrap; }
+  .tabs { margin-left: 0; order: 3; width: 100%; }
+  .tab { flex: 1; justify-content: center; }
+  .sync .lbl { display: none; }
+  .page { padding: 12px 10px 50px; }
+  .cal-head h2 { font-size: 19px; min-width: 0; flex: 1; }
+  .legend { display: none; }
+  .weekdays, .grid { gap: 3px; }
+  .weekdays div { font-size: 10.5px; }
+  .cell { padding: 4px 4px; border-radius: 7px; }
+  .cell .num { font-size: 12px; }
+  .cell .tcount { font-size: 10px; padding: 0 4px; line-height: 14px; }
+  .cell .weight { font-size: 12.5px; }
+  .cell .weight small { display: none; }
+  .cell .dots { gap: 3px; margin-top: 3px; }
+  .cell .dot { width: 6px; height: 6px; }
+  .cell .plus { display: none; }
+  .todo-add { grid-template-columns: 1fr 1fr; }
+  .todo-add .input:first-child { grid-column: 1 / -1; }
+  .modal-back.sheet { padding: 0; place-items: end stretch; }
+  .day { width: 100%; max-height: 94dvh; border-radius: 16px 16px 0 0; border-bottom: 0; }
+  .day-body { padding: 4px 14px 8px; }
+  .wk { grid-template-columns: 1fr 74px 34px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section class="login" id="login" hidden>
+  <form class="login-card" id="loginForm" autocomplete="off">
+    <h1>Заметки</h1>
+    <p>Дневник здоровья в виде календаря и список дел. Данные хранятся в приватном репозитории <b>KryukovMikhail/notes</b>.</p>
+    <ol>
+      <li>Если репозитория ещё нет — <a href="https://github.com/new?name=notes&visibility=private" target="_blank" rel="noopener">создайте приватный репозиторий <b>notes</b></a> (можно пустой).</li>
+      <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">создание fine-grained токена</a>.</li>
+      <li><b>Repository access</b> → Only select repositories → <b>notes</b>.</li>
+      <li><b>Permissions</b> → Repository → <b>Contents: Read and write</b>.</li>
+      <li>Скопируйте токен и вставьте ниже.</li>
+    </ol>
+    <div class="login-row">
+      <input class="input" id="tokenInput" type="password" placeholder="github_pat_…" spellcheck="false" required>
+      <button class="btn primary" type="submit" id="loginBtn">Войти</button>
+    </div>
+    <label class="login-opts"><input type="checkbox" id="remember" checked> Запомнить на этом устройстве</label>
+    <div class="login-err" id="loginErr"></div>
+  </form>
+</section>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app" hidden>
+  <header class="topbar">
+    <a class="brand" href="#/calendar">Заметки</a>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tabCal" data-view="calendar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Календарь</button>
+      <button class="tab" role="tab" id="tabTodo" data-view="todos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11 3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Дела <span class="count" id="todoCount" hidden></span></button>
+    </nav>
+    <div class="spacer"></div>
+    <span class="sync" id="sync"></span>
+    <button class="btn ghost icon-btn" id="refreshBtn" title="Обновить с GitHub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg>
+    </button>
+    <button class="btn ghost icon-btn" id="logoutBtn" title="Выйти">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    </button>
+  </header>
+
+  <main class="page">
+    <!-- calendar view -->
+    <section id="calView">
+      <div class="cal-head">
+        <h2 id="monthTitle"></h2>
+        <button class="btn icon-btn" id="prevBtn" title="Предыдущий месяц"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button class="btn" id="todayBtn">Сегодня</button>
+        <button class="btn icon-btn" id="nextBtn" title="Следующий месяц"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
+        <div class="legend">
+          <span><i class="dot gym"></i>тренировка</span>
+          <span><i class="dot vit"></i>витамины</span>
+          <span><i class="dot note"></i>заметка</span>
+          <span><i class="dot tdo"></i>дела</span>
+        </div>
+      </div>
+      <div class="weekdays"><div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div></div>
+      <div class="grid" id="grid"></div>
+      <div class="summary" id="summary"></div>
+      <div class="chart" id="chart"></div>
+    </section>
+
+    <!-- todos view -->
+    <section id="todoView" hidden>
+      <form class="todo-add" id="todoForm">
+        <input class="input" id="todoText" placeholder="Что нужно сделать?" spellcheck="true" lang="ru" required>
+        <input class="input" id="todoDate" type="date" title="Срок (необязательно)">
+        <button class="btn primary" type="submit">Добавить</button>
+      </form>
+      <div class="todo-filters" id="todoFilters">
+        <button class="chipbtn" data-f="active" aria-pressed="true">Активные</button>
+        <button class="chipbtn" data-f="done" aria-pressed="false">Выполненные</button>
+        <button class="chipbtn" data-f="all" aria-pressed="false">Все</button>
+      </div>
+      <div id="todoList"></div>
+    </section>
+  </main>
+</div>
+
+<div id="modalSlot"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+  'use strict';
+  const OWNER = 'KryukovMikhail';
+  const REPO = 'notes';
+  const API = 'https://api.github.com';
+  const TOKEN_KEY = 'notes-gh-token';
+  const CACHE_PREFIX = 'notes-cache:';
+  const TODOS_PATH = 'todos.json';
+  const SETTINGS_PATH = 'settings.json';
+  const monthPath = (ym) => `health/${ym}.json`;
+
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    token: null,
+    view: 'calendar',
+    ym: null,            // 'YYYY-MM' shown in calendar
+    files: {},           // path -> { sha, data, loaded }
+    todoFilter: 'active',
+  };
+
+  /* ---------- helpers ---------- */
+  const store = {
+    get(k, s = localStorage) { try { return s.getItem(k); } catch { return null; } },
+    set(k, v, s = localStorage) { try { s.setItem(k, v); } catch {} },
+    del(k) { try { localStorage.removeItem(k); } catch {} try { sessionStorage.removeItem(k); } catch {} },
+  };
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else if (k in el && typeof v !== 'string') el[k] = v;
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const c of kids.flat()) if (c != null && c !== false) el.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    return el;
+  }
+  const pad = (n) => String(n).padStart(2, '0');
+  const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const todayIso = () => iso(new Date());
+  const parseIso = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const addDays = (s, n) => { const d = parseIso(s); d.setDate(d.getDate() + n); return iso(d); };
+  const ymOf = (s) => s.slice(0, 7);
+  const addMonths = (ym, n) => { const [y, m] = ym.split('-').map(Number); const d = new Date(y, m - 1 + n, 1); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; };
+  const MONTHS = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+  const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const WD = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  const fmtLong = (s) => { const d = parseIso(s); return `${d.getDate()} ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`; };
+  const fmtShort = (s) => {
+    const t = todayIso();
+    if (s === t) return 'сегодня';
+    if (s === addDays(t, 1)) return 'завтра';
+    if (s === addDays(t, -1)) return 'вчера';
+    const d = parseIso(s);
+    return `${d.getDate()} ${MONTHS_GEN[d.getMonth()].slice(0, 3)}` + (d.getFullYear() !== new Date().getFullYear() ? ` ${d.getFullYear()}` : '');
+  };
+  const fmtKg = (n) => (Math.round(n * 10) / 10).toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
+
+  /* ---------- utf-8 base64 ---------- */
+  function b64encode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  }
+  function b64decode(b64) {
+    const bin = atob(b64.replace(/\s/g, ''));
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
+  /* ---------- GitHub API ---------- */
+  async function gh(path, opts = {}) {
+    const res = await fetch(API + path, {
+      ...opts,
+      headers: {
+        Authorization: 'Bearer ' + state.token,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(opts.body ? { 'Content-Type': 'application/json' } : {}),
+      },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      const err = new Error('HTTP ' + res.status);
+      err.status = res.status;
+      try { err.body = await res.json(); } catch {}
+      throw err;
+    }
+    return res.status === 204 ? null : res.json();
+  }
+  function explain(err) {
+    if (!err || !err.status) return 'Нет связи с GitHub. Проверьте интернет.';
+    if (err.status === 401) return 'Токен недействителен или истёк. Войдите заново.';
+    if (err.status === 403) return 'Недостаточно прав у токена (нужно Contents: Read and write) или превышен лимит запросов.';
+    if (err.status === 404) return 'Репозиторий notes не найден или у токена нет к нему доступа.';
+    if (err.status === 409 || err.status === 422) return 'Файл изменился на GitHub — попробуйте ещё раз.';
+    return 'Ошибка GitHub: ' + err.status + (err.body && err.body.message ? ' — ' + err.body.message : '');
+  }
+
+  /* ---------- JSON files in the repo (cached) ---------- */
+  const DEFAULTS = {
+    [TODOS_PATH]: () => ({ items: [] }),
+    [SETTINGS_PATH]: () => ({ vitamins: ['Витамин D', 'Омега-3', 'Магний', 'Витамин C', 'Цинк'] }),
+  };
+  const defaultFor = (p) => (DEFAULTS[p] ? DEFAULTS[p]() : { days: {} });
+  // Each file keeps the last copy known to be on GitHub (base + sha) plus the list of local
+  // changes not yet written (muts). `data` = base with muts applied — that is what the UI shows.
+  function cacheGet(p) { try { return JSON.parse(store.get(CACHE_PREFIX + p) || 'null'); } catch { return null; } }
+  function cachePut(p, f) { store.set(CACHE_PREFIX + p, JSON.stringify({ sha: f.sha, data: f.base })); }
+  function recompute(f) { const d = clone(f.base); for (const m of f.muts) m(d); f.data = d; }
+  function file(p) {
+    if (!state.files[p]) {
+      const c = cacheGet(p);
+      const f = { sha: c ? c.sha : null, base: c ? c.data : defaultFor(p), loaded: false, muts: [] };
+      recompute(f); state.files[p] = f;
+    }
+    return state.files[p];
+  }
+  async function getRemote(p) {
+    try {
+      const r = await gh(`/repos/${OWNER}/${REPO}/contents/${p}`);
+      let data;
+      try { data = JSON.parse(b64decode(r.content)); } catch { data = defaultFor(p); }
+      return { sha: r.sha, data };
+    } catch (e) {
+      if (e.status !== 404) throw e;
+      return { sha: null, data: defaultFor(p) };
+    }
+  }
+  async function fetchFile(p) {
+    const r = await getRemote(p), f = file(p);
+    f.sha = r.sha; f.base = r.data; f.loaded = true; recompute(f); cachePut(p, f);
+    return f;
+  }
+  const inflight = {};
+  function ensure(p) {
+    const f = file(p);
+    if (f.loaded) return Promise.resolve(f);
+    return inflight[p] || (inflight[p] = fetchFile(p).finally(() => delete inflight[p]));
+  }
+
+  // Serialized writes. mutate(data) changes data in place; on conflict we refetch and re-apply,
+  // so edits made from another device are merged instead of overwritten.
+  let queue = Promise.resolve();
+  let pending = 0;
+  function update(p, mutate, message) {
+    pending++; setSync();
+    const f = file(p);
+    f.muts.push(mutate); recompute(f);              // show the change right away
+    const job = queue.then(async () => {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (attempt > 0 || !f.loaded) { const r = await getRemote(p); f.sha = r.sha; f.base = r.data; f.loaded = true; }
+        const data = clone(f.base); mutate(data);
+        const body = { message, content: b64encode(JSON.stringify(data, null, 2) + '\n') };
+        if (f.sha) body.sha = f.sha;
+        try {
+          const r = await gh(`/repos/${OWNER}/${REPO}/contents/${p}`, { method: 'PUT', body: JSON.stringify(body) });
+          f.sha = r.content.sha; f.base = data;
+          return;
+        } catch (e) {
+          if ((e.status === 409 || e.status === 422) && attempt < 2) continue;
+          throw e;
+        }
+      }
+    });
+    const done = () => { f.muts.splice(f.muts.indexOf(mutate), 1); recompute(f); cachePut(p, f); pending--; };
+    queue = job.catch(() => {});
+    return job.then(
+      () => { done(); setSync(); },
+      (e) => { done(); setSync(e); toast('Не сохранилось: ' + explain(e)); rerender(); throw e; },
+    );
+  }
+  function rerender() { if (!state.token) return; if (state.view === 'calendar') renderCalendar(); else paintTodos(); renderTodoCount(); }
+  let syncTimer;
+  function setSync(err) {
+    const s = $('sync'); clearTimeout(syncTimer);
+    if (err) { s.className = 'sync err'; s.innerHTML = '● <span class="lbl">ошибка сохранения</span>'; return; }
+    if (pending > 0) { s.className = 'sync busy'; s.innerHTML = '● <span class="lbl">сохраняю…</span>'; return; }
+    s.className = 'sync ok'; s.innerHTML = '✓ <span class="lbl">сохранено</span>';
+    syncTimer = setTimeout(() => { s.textContent = ''; s.className = 'sync'; }, 2500);
+  }
+
+  /* ---------- data accessors ---------- */
+  const todos = () => file(TODOS_PATH).data.items;
+  const vitaminsList = () => file(SETTINGS_PATH).data.vitamins;
+  const dayRec = (s) => file(monthPath(ymOf(s))).data.days[s] || null;
+  const isEmptyRec = (r) => !r || (r.weight == null && !(r.workouts || []).length && !(r.vitamins || []).length && !(r.note || '').trim());
+
+  function lastWeightBefore(s) {
+    // look back through loaded months up to 120 days
+    for (let i = 1; i <= 120; i++) {
+      const d = addDays(s, -i), p = monthPath(ymOf(d));
+      if (!state.files[p]) continue;
+      const r = state.files[p].data.days[d];
+      if (r && r.weight != null) return { date: d, weight: r.weight };
+    }
+    return null;
+  }
+
+  /* ---------- toast / modal ---------- */
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 3000);
+  }
+  function confirmBox({ title, text, okText = 'OK', danger = false, onOk }) {
+    const slot = $('modalSlot');
+    const ok = h('button', { class: 'btn ' + (danger ? 'danger' : 'primary'), text: okText });
+    const cancel = h('button', { class: 'btn', text: 'Отмена' });
+    const back = h('div', { class: 'modal-back' }, h('div', { class: 'modal', role: 'dialog' },
+      h('h3', { text: title }), text && h('p', { text }), h('div', { class: 'row' }, cancel, ok)));
+    const prev = [...slot.childNodes];
+    slot.append(back);
+    const close = () => { back.remove(); document.removeEventListener('keydown', onKey, true); };
+    const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+    document.addEventListener('keydown', onKey, true);
+    cancel.onclick = close;
+    ok.onclick = () => { close(); onOk(); };
+    back.addEventListener('mousedown', (e) => { if (e.target === back) close(); });
+    ok.focus();
+    void prev;
+  }
+
+  /* ---------- routing ---------- */
+  function route() {
+    const m = location.hash.match(/^#\/(calendar|todos)(?:\/(\d{4}-\d{2}))?/);
+    state.view = m ? m[1] : 'calendar';
+    if (m && m[2]) state.ym = m[2];
+    if (!state.ym) state.ym = ymOf(todayIso());
+    $('calView').hidden = state.view !== 'calendar';
+    $('todoView').hidden = state.view !== 'todos';
+    $('tabCal').setAttribute('aria-selected', String(state.view === 'calendar'));
+    $('tabTodo').setAttribute('aria-selected', String(state.view === 'todos'));
+    if (state.view === 'calendar') showMonth(); else renderTodos();
+  }
+  const go = (view, ym) => { const hsh = `#/${view}` + (view === 'calendar' && ym ? '/' + ym : ''); if (location.hash === hsh) route(); else location.hash = hsh; };
+
+  /* ---------- calendar ---------- */
+  async function showMonth() {
+    const ym = state.ym;
+    renderCalendar();
+    try {
+      await Promise.all([ensure(monthPath(ym)), ensure(monthPath(addMonths(ym, -1))), ensure(TODOS_PATH), ensure(SETTINGS_PATH)]);
+    } catch (e) { toast(explain(e)); }
+    if (state.ym === ym && state.view === 'calendar') renderCalendar();
+    renderTodoCount();
+  }
+
+  function renderCalendar() {
+    const [y, m] = state.ym.split('-').map(Number);
+    $('monthTitle').textContent = `${MONTHS[m - 1]} ${y}`;
+    const first = new Date(y, m - 1, 1);
+    const offset = (first.getDay() + 6) % 7;
+    const start = new Date(y, m - 1, 1 - offset);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const cells = Math.ceil((offset + daysInMonth) / 7) * 7;
+    const t = todayIso();
+    const todoByDay = {};
+    for (const it of todos()) if (it.due) (todoByDay[it.due] ||= []).push(it);
+
+    const grid = $('grid'); grid.innerHTML = '';
+    for (let i = 0; i < cells; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const s = iso(d);
+      const out = d.getMonth() !== m - 1;
+      const p = monthPath(ymOf(s));
+      const rec = state.files[p] ? state.files[p].data.days[s] : null;
+      const has = !isEmptyRec(rec);
+      const dayTodos = todoByDay[s] || [];
+      const open = dayTodos.filter((x) => !x.done).length;
+
+      const num = h('div', { class: 'num' }, h('b', { text: d.getDate() }),
+        dayTodos.length ? h('span', { class: 'tcount' + (open ? '' : ' done'), title: `Дела: ${open} из ${dayTodos.length} не выполнено`, text: open || '✓' }) : null);
+      const kids = [num];
+      if (has) {
+        if (rec.weight != null) kids.push(h('div', { class: 'weight' }, fmtKg(rec.weight), h('small', { text: 'кг' })));
+        const lines = h('div', { class: 'lines' });
+        if ((rec.workouts || []).length) lines.append(h('div', null, h('i', { class: 'dot gym' }), rec.workouts.map((w) => w.type + (w.minutes ? ` ${w.minutes}′` : '')).join(', ')));
+        if ((rec.vitamins || []).length) lines.append(h('div', null, h('i', { class: 'dot vit' }), rec.vitamins.join(', ')));
+        if ((rec.note || '').trim()) lines.append(h('div', null, h('i', { class: 'dot note' }), rec.note.trim().split('\n')[0]));
+        kids.push(lines);
+        const dots = h('div', { class: 'dots' });
+        if ((rec.workouts || []).length) dots.append(h('i', { class: 'dot gym' }));
+        if ((rec.vitamins || []).length) dots.append(h('i', { class: 'dot vit' }));
+        if ((rec.note || '').trim()) dots.append(h('i', { class: 'dot note' }));
+        kids.push(dots);
+      }
+      kids.push(h('span', { class: 'plus', text: '+' }));
+      const wd = d.getDay();
+      grid.append(h('button', {
+        class: 'cell' + (out ? ' out' : '') + (has ? ' has' : '') + (s === t ? ' today' : '') + (wd === 0 || wd === 6 ? ' weekend' : ''),
+        title: fmtLong(s), onclick: () => openDay(s),
+      }, kids));
+    }
+    renderSummary();
+  }
+
+  function renderSummary() {
+    const ym = state.ym;
+    const f = state.files[monthPath(ym)];
+    const days = f ? f.data.days : {};
+    const keys = Object.keys(days).filter((k) => k.startsWith(ym) && !isEmptyRec(days[k])).sort();
+    const weights = keys.filter((k) => days[k].weight != null).map((k) => ({ d: k, w: days[k].weight }));
+    const workouts = keys.reduce((n, k) => n + ((days[k].workouts || []).length ? 1 : 0), 0);
+    const minutes = keys.reduce((n, k) => n + (days[k].workouts || []).reduce((a, w) => a + (Number(w.minutes) || 0), 0), 0);
+    const vitDays = keys.filter((k) => (days[k].vitamins || []).length).length;
+
+    const sum = $('summary'); sum.innerHTML = '';
+    const stat = (k, v) => sum.append(h('div', { class: 'stat' }, h('div', { class: 'k', text: k }), h('div', { class: 'v' }, v)));
+    stat('Записей', [String(keys.length), h('small', { text: plural(keys.length, 'день', 'дня', 'дней') })]);
+    if (weights.length) {
+      const last = weights[weights.length - 1].w, firstW = weights[0].w, delta = last - firstW;
+      stat('Вес', [fmtKg(last), h('small', { text: 'кг' }),
+        weights.length > 1 ? h('small', { class: delta < 0 ? 'down' : delta > 0 ? 'up' : '', text: (delta > 0 ? '+' : delta < 0 ? '−' : '±') + fmtKg(Math.abs(delta)) }) : null]);
+    } else stat('Вес', h('small', { text: 'нет данных', style: 'margin:0' }));
+    stat('Тренировки', [String(workouts), minutes ? h('small', { text: `${Math.round(minutes / 6) / 10} ч` }) : null]);
+    stat('Витамины', [String(vitDays), h('small', { text: plural(vitDays, 'день', 'дня', 'дней') })]);
+
+    // weight chart
+    const chart = $('chart'); chart.innerHTML = '';
+    chart.append(h('div', { class: 'k', text: 'Вес за месяц' }));
+    if (weights.length < 2) { chart.append(h('div', { class: 'empty', text: weights.length ? 'Нужно хотя бы две записи веса, чтобы построить график.' : 'Записей веса в этом месяце пока нет.' })); return; }
+    const [y, m] = ym.split('-').map(Number);
+    const dim = new Date(y, m, 0).getDate();
+    const W = Math.max(280, Math.round(chart.clientWidth - 28)), H = 150, L = 44, R = 12, T = 12, B = 24;
+    let lo = Math.min(...weights.map((x) => x.w)), hi = Math.max(...weights.map((x) => x.w));
+    if (hi - lo < 1) { const mid = (hi + lo) / 2; lo = mid - 0.5; hi = mid + 0.5; }
+    const padv = (hi - lo) * 0.12; lo -= padv; hi += padv;
+    const X = (d) => L + ((parseIso(d).getDate() - 1) / (dim - 1)) * (W - L - R);
+    const Y = (w) => T + (1 - (w - lo) / (hi - lo)) * (H - T - B);
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const add = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; svg.append(e); return e; };
+    for (const v of [hi - padv, (hi + lo) / 2, lo + padv]) {
+      add('line', { x1: L, x2: W - R, y1: Y(v), y2: Y(v), stroke: '#2a2a2a', 'stroke-width': 1 });
+      add('text', { x: L - 8, y: Y(v) + 4, 'text-anchor': 'end', fill: '#a3a3a3', 'font-size': 12 }, fmtKg(v));
+    }
+    for (const dd of [1, 8, 15, 22, dim]) add('text', { x: L + ((dd - 1) / (dim - 1)) * (W - L - R), y: H - 6, 'text-anchor': 'middle', fill: '#a3a3a3', 'font-size': 12 }, dd);
+    add('polyline', { points: weights.map((x) => `${X(x.d)},${Y(x.w)}`).join(' '), fill: 'none', stroke: '#38bdf8', 'stroke-width': 2, 'stroke-linejoin': 'round' });
+    chart.append(svg);
+    // dots as HTML overlay keep round shape regardless of stretch
+    const wrap = h('div', { style: 'position:relative' });
+    svg.replaceWith(wrap); wrap.append(svg);
+    for (const x of weights) {
+      const dot = h('span', { title: `${fmtLong(x.d)}: ${fmtKg(x.w)} кг`, style: `position:absolute;left:${X(x.d)}px;top:${Y(x.w)}px;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#38bdf8;border:2px solid #161616;cursor:pointer` });
+      dot.onclick = () => openDay(x.d);
+      wrap.append(dot);
+    }
+  }
+
+  /* ---------- day panel ---------- */
+  async function openDay(s) {
+    const slot = $('modalSlot'); slot.innerHTML = '';
+    const p = monthPath(ymOf(s));
+    try { await Promise.all([ensure(p), ensure(monthPath(addMonths(ymOf(s), -1))), ensure(SETTINGS_PATH), ensure(TODOS_PATH)]); }
+    catch (e) { toast(explain(e)); }
+
+    const saved = dayRec(s);
+    const draft = saved ? clone(saved) : { weight: null, workouts: [], vitamins: [], note: '' };
+    draft.workouts ||= []; draft.vitamins ||= []; draft.note ||= '';
+    let editVits = false;
+    const d = parseIso(s);
+
+    // weight
+    const wInput = h('input', { class: 'input', type: 'text', inputmode: 'decimal', placeholder: '0,0', value: draft.weight != null ? fmtKg(draft.weight) : '' });
+    const wHint = h('span', { class: 'hint' });
+    const prev = lastWeightBefore(s);
+    function updHint() {
+      wHint.innerHTML = '';
+      if (!prev) return;
+      const cur = parseFloat(wInput.value.replace(',', '.'));
+      wHint.append(`Предыдущий: ${fmtKg(prev.weight)} кг (${fmtShort(prev.date)})`);
+      if (!isNaN(cur)) { const dl = cur - prev.weight; if (Math.abs(dl) >= 0.05) wHint.append(' ', h('b', { class: dl < 0 ? 'down' : 'up', text: (dl > 0 ? '+' : '−') + fmtKg(Math.abs(dl)) })); }
+    }
+    wInput.addEventListener('input', updHint); updHint();
+
+    // workouts
+    const wkList = h('div');
+    const typeSuggest = collectWorkoutTypes();
+    const dl = h('datalist', { id: 'wkTypes' }, typeSuggest.map((t) => h('option', { value: t })));
+    function renderWorkouts() {
+      wkList.innerHTML = '';
+      draft.workouts.forEach((w, i) => {
+        const type = h('input', { class: 'input', placeholder: 'Вид: бег, зал, плавание…', list: 'wkTypes', value: w.type || '', oninput: (e) => (w.type = e.target.value) });
+        const min = h('input', { class: 'input', type: 'number', min: '0', step: '5', inputmode: 'numeric', placeholder: 'мин', value: w.minutes || '', oninput: (e) => (w.minutes = e.target.value ? Number(e.target.value) : null) });
+        const del = h('button', { class: 'btn ghost icon-btn danger', title: 'Убрать', type: 'button', onclick: () => { draft.workouts.splice(i, 1); renderWorkouts(); } }, '✕');
+        const note = h('input', { class: 'input note', placeholder: 'Детали (необязательно): 5 км, жим 3×10…', value: w.details || '', oninput: (e) => (w.details = e.target.value) });
+        wkList.append(h('div', { class: 'wk' }, type, min, del, note));
+      });
+      if (!draft.workouts.length) wkList.append(h('div', { class: 'empty-note', text: 'Тренировок нет.' }));
+    }
+    renderWorkouts();
+    const addWk = h('button', { class: 'btn sm', type: 'button', onclick: () => { draft.workouts.push({ type: '', minutes: null, details: '' }); renderWorkouts(); wkList.querySelector('.wk:last-child input').focus(); } }, '+ Тренировка');
+
+    // vitamins
+    const chipBox = h('div', { class: 'chips' });
+    const vitInput = h('input', { class: 'input', placeholder: 'Новый витамин или добавка' });
+    const vitAddRow = h('form', { class: 'add-vit', hidden: true, onsubmit: (e) => {
+      e.preventDefault();
+      const name = vitInput.value.trim(); if (!name) return;
+      if (!vitaminsList().some((v) => v.toLowerCase() === name.toLowerCase())) update(SETTINGS_PATH, (data) => { if (!data.vitamins.includes(name)) data.vitamins.push(name); }, `Витамины: добавлен «${name}»`);
+      if (!draft.vitamins.includes(name)) draft.vitamins.push(name);
+      vitInput.value = ''; renderChips();
+    } }, vitInput, h('button', { class: 'btn', type: 'submit', text: 'Добавить' }));
+    function renderChips() {
+      chipBox.innerHTML = '';
+      const all = [...vitaminsList()];
+      for (const v of draft.vitamins) if (!all.includes(v)) all.push(v);
+      for (const v of all) {
+        const on = draft.vitamins.includes(v);
+        chipBox.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(on), onclick: () => {
+          if (editVits) {
+            confirmBox({ title: `Убрать «${v}» из списка?`, text: 'Из уже сделанных записей он не удалится.', okText: 'Убрать', danger: true,
+              onOk: () => { update(SETTINGS_PATH, (data) => { data.vitamins = data.vitamins.filter((x) => x !== v); }, `Витамины: убран «${v}»`); renderChips(); } });
+            return;
+          }
+          if (on) draft.vitamins = draft.vitamins.filter((x) => x !== v); else draft.vitamins.push(v);
+          renderChips();
+        } }, v, editVits && vitaminsList().includes(v) ? h('span', { class: 'x', text: '×' }) : null));
+      }
+      chipBox.append(h('button', { class: 'chip add', type: 'button', onclick: () => { vitAddRow.hidden = false; vitInput.focus(); } }, '+ добавить'));
+    }
+    renderChips();
+    const yesterday = dayRec(addDays(s, -1));
+    const sameAsYesterday = yesterday && (yesterday.vitamins || []).length
+      ? h('button', { class: 'btn ghost sm', type: 'button', title: (yesterday.vitamins || []).join(', '), onclick: () => { for (const v of yesterday.vitamins) if (!draft.vitamins.includes(v)) draft.vitamins.push(v); renderChips(); } }, 'Как вчера')
+      : null;
+    const editVitsBtn = h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { editVits = !editVits; editVitsBtn.textContent = editVits ? 'Готово' : 'Изменить список'; renderChips(); } }, 'Изменить список');
+
+    // note
+    const noteInput = h('textarea', { class: 'input', placeholder: 'Самочувствие, сон, питание, что угодно…', spellcheck: 'true', lang: 'ru', oninput: (e) => (draft.note = e.target.value) });
+    noteInput.value = draft.note;
+
+    // todos for this day
+    const dayTodoBox = h('div', { class: 'day-todos' });
+    const tdInput = h('input', { class: 'input', placeholder: 'Дело на этот день' });
+    const tdForm = h('form', { class: 'add-vit', onsubmit: (e) => {
+      e.preventDefault(); const text = tdInput.value.trim(); if (!text) return;
+      addTodo(text, s); tdInput.value = ''; renderDayTodos();
+    } }, tdInput, h('button', { class: 'btn', type: 'submit', text: 'Добавить' }));
+    function renderDayTodos() {
+      dayTodoBox.innerHTML = '';
+      const list = todos().filter((x) => x.due === s).sort((a, b) => a.done - b.done);
+      for (const it of list) dayTodoBox.append(todoRow(it, { compact: true, onChange: renderDayTodos }));
+      if (!list.length) dayTodoBox.append(h('div', { class: 'empty-note', text: 'Дел на этот день нет.' }));
+    }
+    renderDayTodos();
+
+    // shell
+    const nav = (n) => () => { if (dirty()) return confirmBox({ title: 'Сохранить изменения?', text: 'В записи есть несохранённые изменения.', okText: 'Сохранить', onOk: async () => { await doSave(true); openDay(addDays(s, n)); } }); openDay(addDays(s, n)); };
+    const initial = JSON.stringify(normalize(clone(draft)));
+    function collect() {
+      const raw = wInput.value.trim().replace(',', '.');
+      const w = raw === '' ? null : Number(raw);
+      return { ...draft, weight: w };
+    }
+    const dirty = () => JSON.stringify(normalize(collect())) !== initial;
+    const err = h('div', { class: 'err', style: 'font-size:13px;color:var(--danger);align-self:center' });
+    async function doSave(silent) {
+      const rec = collect();
+      if (rec.weight != null && (isNaN(rec.weight) || rec.weight <= 0 || rec.weight > 400)) { err.textContent = 'Проверьте вес.'; wInput.focus(); return false; }
+      const clean = normalize(rec);
+      const label = fmtLong(s);
+      close();
+      update(p, (data) => { if (isEmptyRec(clean)) delete data.days[s]; else data.days[s] = clean; }, (isEmptyRec(clean) ? 'Удалена запись за ' : 'Запись за ') + label).catch(() => {});
+      renderCalendar();
+      if (!silent) toast(isEmptyRec(clean) ? 'Запись очищена' : 'Записано');
+      return true;
+    }
+    const saveBtn = h('button', { class: 'btn primary', type: 'button', onclick: () => doSave() }, 'Сохранить');
+    const delBtn = !isEmptyRec(saved) ? h('button', { class: 'btn ghost danger', type: 'button', onclick: () => confirmBox({ title: 'Удалить запись за ' + fmtLong(s) + '?', okText: 'Удалить', danger: true,
+      onOk: () => { close(); update(p, (data) => { delete data.days[s]; }, 'Удалена запись за ' + fmtLong(s)).catch(() => {}); renderCalendar(); toast('Запись удалена'); } }) }, 'Удалить') : null;
+    const cancelBtn = h('button', { class: 'btn', type: 'button', onclick: () => tryClose() }, 'Отмена');
+
+    const panel = h('div', { class: 'modal day', role: 'dialog', 'aria-label': fmtLong(s) },
+      h('div', { class: 'day-head' },
+        h('button', { class: 'btn ghost icon-btn', title: 'Предыдущий день', onclick: nav(-1) }, '‹'),
+        h('h3', null, `${d.getDate()} ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`, h('small', { text: WD[d.getDay()][0].toUpperCase() + WD[d.getDay()].slice(1) + (s === todayIso() ? ' · сегодня' : '') })),
+        h('button', { class: 'btn ghost icon-btn', title: 'Следующий день', onclick: nav(1) }, '›')),
+      h('div', { class: 'day-body' },
+        h('div', { class: 'sec' }, h('div', { class: 'sec-title', text: 'Вес' }), h('div', { class: 'weight-row' }, wInput, h('span', { class: 'hint', text: 'кг' }), wHint)),
+        h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot gym' }), 'Тренировки', h('span', { class: 'spacer' }), addWk), wkList, dl),
+        h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot vit' }), 'Витамины и добавки', h('span', { class: 'spacer' }), sameAsYesterday, editVitsBtn), chipBox, vitAddRow),
+        h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot note' }), 'Заметка'), noteInput),
+        h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot tdo' }), 'Дела на этот день'), dayTodoBox, tdForm)),
+      h('div', { class: 'day-foot' }, delBtn, err, h('span', { class: 'spacer' }), cancelBtn, saveBtn));
+    const back = h('div', { class: 'modal-back sheet' }, panel);
+    slot.append(back);
+
+    function close() { back.remove(); document.removeEventListener('keydown', onKey); renderCalendar(); renderTodoCount(); }
+    function tryClose() {
+      if (!dirty()) return close();
+      confirmBox({ title: 'Закрыть без сохранения?', text: 'Изменения в записи будут потеряны.', okText: 'Не сохранять', danger: true, onOk: close });
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') tryClose();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); doSave(); }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); doSave(); }
+    }
+    document.addEventListener('keydown', onKey);
+    back.addEventListener('mousedown', (e) => { if (e.target === back) tryClose(); });
+    if (matchMedia('(pointer: fine)').matches) wInput.focus();
+  }
+
+  function normalize(r) {
+    const out = {};
+    if (r.weight != null && !isNaN(r.weight)) out.weight = Math.round(r.weight * 10) / 10;
+    const wk = (r.workouts || []).map((w) => {
+      const o = { type: (w.type || '').trim() };
+      if (w.minutes) o.minutes = Number(w.minutes);
+      if ((w.details || '').trim()) o.details = w.details.trim();
+      return o;
+    }).filter((w) => w.type || w.minutes || w.details).map((w) => (w.type ? w : { ...w, type: 'Тренировка' }));
+    if (wk.length) out.workouts = wk;
+    if ((r.vitamins || []).length) out.vitamins = [...r.vitamins];
+    if ((r.note || '').trim()) out.note = r.note.trim();
+    return out;
+  }
+  function collectWorkoutTypes() {
+    const seen = new Map();
+    for (const [p, f] of Object.entries(state.files)) {
+      if (!p.startsWith('health/')) continue;
+      for (const r of Object.values(f.data.days || {})) for (const w of r.workouts || []) if (w.type) seen.set(w.type, (seen.get(w.type) || 0) + 1);
+    }
+    const base = ['Бег', 'Тренажёрный зал', 'Плавание', 'Велосипед', 'Ходьба', 'Растяжка', 'Йога'];
+    for (const b of base) if (!seen.has(b)) seen.set(b, 0);
+    return [...seen.entries()].sort((a, b) => b[1] - a[1]).map((x) => x[0]);
+  }
+
+  /* ---------- todos ---------- */
+  function addTodo(text, due) {
+    const item = { id: uid(), text, done: false, created: new Date().toISOString() };
+    if (due) item.due = due;
+    update(TODOS_PATH, (data) => { data.items.push(item); }, 'Дело: ' + text).catch(() => {});
+    renderTodoCount();
+  }
+  function setTodo(id, patch, msg) {
+    update(TODOS_PATH, (data) => { const it = data.items.find((x) => x.id === id); if (it) { Object.assign(it, patch); for (const k of Object.keys(patch)) if (patch[k] == null) delete it[k]; } }, msg).catch(() => {});
+    renderTodoCount();
+  }
+  function removeTodo(id, text) {
+    update(TODOS_PATH, (data) => { data.items = data.items.filter((x) => x.id !== id); }, 'Удалено дело: ' + text).catch(() => {});
+    renderTodoCount();
+  }
+  function renderTodoCount() {
+    const t = todayIso();
+    const n = todos().filter((x) => !x.done && x.due && x.due <= t).length;
+    const c = $('todoCount'); c.hidden = !n; c.textContent = n;
+    c.title = n ? `${n} на сегодня или просрочено` : '';
+  }
+
+  function todoRow(it, { compact = false, onChange } = {}) {
+    const t = todayIso();
+    const refresh = () => { onChange ? onChange() : renderTodos(); };
+    const cb = h('input', { type: 'checkbox', checked: !!it.done, title: it.done ? 'Вернуть в активные' : 'Отметить выполненным',
+      onchange: (e) => { setTodo(it.id, { done: e.target.checked, doneAt: e.target.checked ? new Date().toISOString() : null }, (e.target.checked ? 'Выполнено: ' : 'Снова активно: ') + it.text); refresh(); } });
+    const txt = h('span', { class: 'txt', text: it.text, title: 'Нажмите, чтобы изменить' });
+    const row = h('div', { class: 'todo' + (it.done ? ' done' : '') });
+    txt.onclick = () => {
+      const inp = h('input', { class: 'input todo-edit', value: it.text });
+      txt.replaceWith(inp); inp.focus(); inp.select();
+      let doneEdit = false;
+      const finish = (commit) => {
+        if (doneEdit) return; doneEdit = true;
+        const v = inp.value.trim();
+        if (commit && v && v !== it.text) setTodo(it.id, { text: v }, 'Изменено дело: ' + v);
+        refresh();
+      };
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') finish(true); if (e.key === 'Escape') { e.stopPropagation(); finish(false); } });
+      inp.addEventListener('blur', () => finish(true));
+    };
+    const dateInp = h('input', { type: 'date', class: 'input', style: 'position:absolute;opacity:0;pointer-events:none;width:1px;height:1px', value: it.due || '' });
+    dateInp.addEventListener('change', () => { setTodo(it.id, { due: dateInp.value || null }, 'Срок дела: ' + it.text); refresh(); });
+    const due = h('button', { class: 'due' + (!it.done && it.due && it.due < t ? ' over' : ''), type: 'button', title: it.due ? fmtLong(it.due) + ' — изменить срок' : 'Назначить срок',
+      text: it.due ? fmtShort(it.due) : '+ срок',
+      onclick: () => { if (dateInp.showPicker) { try { dateInp.showPicker(); return; } catch {} } dateInp.style.pointerEvents = 'auto'; dateInp.focus(); dateInp.click(); } });
+    const del = h('button', { class: 'btn ghost icon-btn danger del', type: 'button', title: 'Удалить',
+      onclick: () => confirmBox({ title: 'Удалить дело?', text: it.text, okText: 'Удалить', danger: true, onOk: () => { removeTodo(it.id, it.text); refresh(); } }) }, '✕');
+    row.append(cb, txt);
+    if (!compact) row.append(h('span', { style: 'position:relative' }, due, dateInp));
+    row.append(del);
+    return row;
+  }
+
+  async function renderTodos() {
+    const list = $('todoList');
+    if (!file(TODOS_PATH).loaded && !todos().length) list.innerHTML = '<div class="loading">Загружаю…</div>';
+    paintTodos();
+    try { await ensure(TODOS_PATH); } catch (e) { toast(explain(e)); }
+    if (state.view === 'todos') paintTodos();
+    renderTodoCount();
+  }
+  function paintTodos() {
+    const list = $('todoList'); list.innerHTML = '';
+    const t = todayIso();
+    const f = state.todoFilter;
+    document.querySelectorAll('#todoFilters .chipbtn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.f === f)));
+    const items = todos().filter((x) => (f === 'all' ? true : f === 'done' ? x.done : !x.done));
+    if (!items.length) { list.append(h('div', { class: 'empty-note', text: f === 'done' ? 'Выполненных дел пока нет.' : 'Дел нет — можно отдыхать.' })); return; }
+    const byDue = (a, b) => (a.due || '').localeCompare(b.due || '') || (a.created || '').localeCompare(b.created || '');
+    if (f === 'done') {
+      const sorted = items.sort((a, b) => (b.doneAt || '').localeCompare(a.doneAt || ''));
+      group('Выполнено', sorted);
+      return;
+    }
+    const open = items.filter((x) => !x.done), done = items.filter((x) => x.done);
+    group('Просрочено', open.filter((x) => x.due && x.due < t).sort(byDue), 'overdue');
+    group('Сегодня', open.filter((x) => x.due === t).sort(byDue));
+    group('Завтра', open.filter((x) => x.due === addDays(t, 1)).sort(byDue));
+    group('Позже', open.filter((x) => x.due && x.due > addDays(t, 1)).sort(byDue));
+    group('Без срока', open.filter((x) => !x.due).sort(byDue));
+    if (f === 'all') group('Выполнено', done.sort((a, b) => (b.doneAt || '').localeCompare(a.doneAt || '')));
+    function group(title, arr, cls) {
+      if (!arr.length) return;
+      list.append(h('div', { class: 'group ' + (cls || '') }, h('h3', null, title, h('span', { text: arr.length, style: 'color:var(--faint)' })), arr.map((it) => todoRow(it))));
+    }
+  }
+
+  /* ---------- auth ---------- */
+  function logout() {
+    store.del(TOKEN_KEY); state.token = null;
+    try { Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX)).forEach((k) => localStorage.removeItem(k)); } catch {}
+    state.files = {};
+    $('app').hidden = true; $('login').hidden = false; $('tokenInput').value = '';
+  }
+  async function start() {
+    $('login').hidden = true; $('app').hidden = false;
+    route();
+    try { await gh(`/repos/${OWNER}/${REPO}`); }
+    catch (e) { if (e.status === 401 || e.status === 404) { logout(); $('loginErr').textContent = explain(e); } }
+  }
+  async function refreshAll() {
+    const paths = Object.keys(state.files);
+    for (const p of paths) state.files[p].loaded = false;
+    try { await Promise.all(paths.map((p) => ensure(p))); toast('Обновлено'); } catch (e) { toast(explain(e)); }
+    route();
+  }
+
+  /* ---------- wiring ---------- */
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tok = $('tokenInput').value.trim(); if (!tok) return;
+    $('loginBtn').disabled = true; $('loginErr').textContent = '';
+    state.token = tok;
+    try {
+      await gh(`/repos/${OWNER}/${REPO}`);
+      if ($('remember').checked) store.set(TOKEN_KEY, tok); else store.set(TOKEN_KEY, tok, sessionStorage);
+      await start();
+    } catch (err) { state.token = null; $('loginErr').textContent = explain(err); }
+    finally { $('loginBtn').disabled = false; }
+  });
+  $('logoutBtn').onclick = () => confirmBox({ title: 'Выйти?', text: 'Токен и локальная копия данных будут удалены из этого браузера. Всё, что сохранено, останется в репозитории.', okText: 'Выйти', onOk: logout });
+  $('refreshBtn').onclick = refreshAll;
+  $('tabCal').onclick = () => go('calendar', state.ym);
+  $('tabTodo').onclick = () => go('todos');
+  $('prevBtn').onclick = () => go('calendar', addMonths(state.ym, -1));
+  $('nextBtn').onclick = () => go('calendar', addMonths(state.ym, 1));
+  $('todayBtn').onclick = () => go('calendar', ymOf(todayIso()));
+  $('todoForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = $('todoText').value.trim(); if (!text) return;
+    addTodo(text, $('todoDate').value || null);
+    $('todoText').value = ''; $('todoDate').value = ''; $('todoText').focus();
+    paintTodos();
+  });
+  $('todoFilters').addEventListener('click', (e) => { const b = e.target.closest('.chipbtn'); if (!b) return; state.todoFilter = b.dataset.f; paintTodos(); });
+  document.addEventListener('keydown', (e) => {
+    if ($('modalSlot').childElementCount || state.view !== 'calendar' || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if (e.key === 'ArrowLeft') $('prevBtn').click();
+    if (e.key === 'ArrowRight') $('nextBtn').click();
+  });
+  let rsz; window.addEventListener('resize', () => { clearTimeout(rsz); rsz = setTimeout(() => { if (state.token && state.view === 'calendar') renderSummary(); }, 150); });
+  window.addEventListener('hashchange', () => { if (state.token) route(); });
+  window.addEventListener('beforeunload', (e) => { if (pending > 0) { e.preventDefault(); e.returnValue = ''; } });
+  document.addEventListener('visibilitychange', () => {
+    // pick up edits from other devices when coming back to the tab
+    if (document.visibilityState === 'visible' && state.token && pending === 0 && !$('modalSlot').childElementCount) {
+      for (const p of Object.keys(state.files)) state.files[p].loaded = false;
+      route();
+    }
+  });
+
+  /* ---------- boot ---------- */
+  state.token = store.get(TOKEN_KEY) || store.get(TOKEN_KEY, sessionStorage);
+  if (state.token) start(); else $('login').hidden = false;
+})();
+</script>
+</body>
+</html>
