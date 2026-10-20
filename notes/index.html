@@ -27,6 +27,7 @@
   --ok: #4ade80;
   --warn: #fbbf24;
   --vit: #fbbf24;
+  --med: #fb7185;
   --gym: #4ade80;
   --note: #c084fc;
   --todo: #38bdf8;
@@ -96,7 +97,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
 .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-left: auto; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
-.dot.gym { background: var(--gym); } .dot.vit { background: var(--vit); } .dot.note { background: var(--note); } .dot.tdo { background: var(--todo); }
+.dot.gym { background: var(--gym); } .dot.vit { background: var(--vit); } .dot.med { background: var(--med); } .dot.note { background: var(--note); } .dot.tdo { background: var(--todo); }
 
 .weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
 .weekdays div { text-align: center; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 4px 0; }
@@ -123,7 +124,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
 .cell.has .plus { display: none; }
 
 /* summary */
-.summary { margin-top: 18px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)) ; gap: 10px; }
+.summary { margin-top: 18px; display: grid; grid-template-columns: repeat(5, minmax(0,1fr)) ; gap: 10px; }
 .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
 .stat .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 .stat .v { font-size: 22px; font-weight: 700; color: var(--text-strong); font-variant-numeric: tabular-nums; margin-top: 2px; }
@@ -178,9 +179,11 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
 .wk .note { grid-column: 1 / 3; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg-2); cursor: pointer; font-size: 14px; user-select: none; }
-.chip:hover { border-color: var(--vit); }
-.chip[aria-pressed="true"] { border-color: var(--vit); background: color-mix(in srgb, var(--vit) 16%, transparent); color: var(--text-strong); }
-.chip[aria-pressed="true"]::before { content: '✓'; color: var(--vit); font-weight: 700; }
+.chips { --c: var(--vit); }
+.chips.med { --c: var(--med); }
+.chip:hover { border-color: var(--c); }
+.chip[aria-pressed="true"] { border-color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--text-strong); }
+.chip[aria-pressed="true"]::before { content: '✓'; color: var(--c); font-weight: 700; }
 .chip .x { margin-left: 2px; color: var(--danger); font-weight: 700; }
 .chip.add { border-style: dashed; color: var(--muted); }
 .add-vit { display: flex; gap: 6px; margin-top: 8px; }
@@ -195,6 +198,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
 @media (max-width: 860px) {
   .cell .lines { display: none; }
   .summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .summary .stat:first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 600px) {
   .topbar { padding: 8px 10px; gap: 6px; flex-wrap: wrap; }
@@ -277,6 +281,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
         <div class="legend">
           <span><i class="dot gym"></i>тренировка</span>
           <span><i class="dot vit"></i>витамины</span>
+          <span><i class="dot med"></i>лекарства</span>
           <span><i class="dot note"></i>заметка</span>
           <span><i class="dot tdo"></i>дела</span>
         </div>
@@ -500,8 +505,9 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
   /* ---------- data accessors ---------- */
   const todos = () => file(TODOS_PATH).data.items;
   const vitaminsList = () => file(SETTINGS_PATH).data.vitamins;
+  const listOf = (key) => file(SETTINGS_PATH).data[key] || [];
   const dayRec = (s) => file(monthPath(ymOf(s))).data.days[s] || null;
-  const isEmptyRec = (r) => !r || (r.weight == null && !(r.workouts || []).length && !(r.vitamins || []).length && !(r.note || '').trim());
+  const isEmptyRec = (r) => !r || (r.weight == null && !(r.workouts || []).length && !(r.vitamins || []).length && !(r.meds || []).length && !(r.note || '').trim());
 
   function lastWeightBefore(s) {
     // look back through loaded months up to 120 days
@@ -594,11 +600,13 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
         const lines = h('div', { class: 'lines' });
         if ((rec.workouts || []).length) lines.append(h('div', null, h('i', { class: 'dot gym' }), rec.workouts.map((w) => w.type + (w.minutes ? ` ${w.minutes}′` : '')).join(', ')));
         if ((rec.vitamins || []).length) lines.append(h('div', null, h('i', { class: 'dot vit' }), rec.vitamins.join(', ')));
+        if ((rec.meds || []).length) lines.append(h('div', null, h('i', { class: 'dot med' }), rec.meds.join(', ')));
         if ((rec.note || '').trim()) lines.append(h('div', null, h('i', { class: 'dot note' }), rec.note.trim().split('\n')[0]));
         kids.push(lines);
         const dots = h('div', { class: 'dots' });
         if ((rec.workouts || []).length) dots.append(h('i', { class: 'dot gym' }));
         if ((rec.vitamins || []).length) dots.append(h('i', { class: 'dot vit' }));
+        if ((rec.meds || []).length) dots.append(h('i', { class: 'dot med' }));
         if ((rec.note || '').trim()) dots.append(h('i', { class: 'dot note' }));
         kids.push(dots);
       }
@@ -621,6 +629,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
     const workouts = keys.reduce((n, k) => n + ((days[k].workouts || []).length ? 1 : 0), 0);
     const minutes = keys.reduce((n, k) => n + (days[k].workouts || []).reduce((a, w) => a + (Number(w.minutes) || 0), 0), 0);
     const vitDays = keys.filter((k) => (days[k].vitamins || []).length).length;
+    const medDays = keys.filter((k) => (days[k].meds || []).length).length;
 
     const sum = $('summary'); sum.innerHTML = '';
     const stat = (k, v) => sum.append(h('div', { class: 'stat' }, h('div', { class: 'k', text: k }), h('div', { class: 'v' }, v)));
@@ -632,6 +641,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
     } else stat('Вес', h('small', { text: 'нет данных', style: 'margin:0' }));
     stat('Тренировки', [String(workouts), minutes ? h('small', { text: `${Math.round(minutes / 6) / 10} ч` }) : null]);
     stat('Витамины', [String(vitDays), h('small', { text: plural(vitDays, 'день', 'дня', 'дней') })]);
+    stat('Лекарства', [String(medDays), h('small', { text: plural(medDays, 'день', 'дня', 'дней') })]);
 
     // weight chart
     const chart = $('chart'); chart.innerHTML = '';
@@ -673,9 +683,8 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
     catch (e) { toast(explain(e)); }
 
     const saved = dayRec(s);
-    const draft = saved ? clone(saved) : { weight: null, workouts: [], vitamins: [], note: '' };
-    draft.workouts ||= []; draft.vitamins ||= []; draft.note ||= '';
-    let editVits = false;
+    const draft = saved ? clone(saved) : { weight: null, workouts: [], vitamins: [], meds: [], note: '' };
+    draft.workouts ||= []; draft.vitamins ||= []; draft.meds ||= []; draft.note ||= '';
     const d = parseIso(s);
 
     // weight
@@ -709,40 +718,47 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
     renderWorkouts();
     const addWk = h('button', { class: 'btn sm', type: 'button', onclick: () => { draft.workouts.push({ type: '', minutes: null, details: '' }); renderWorkouts(); wkList.querySelector('.wk:last-child input').focus(); } }, '+ Тренировка');
 
-    // vitamins
-    const chipBox = h('div', { class: 'chips' });
-    const vitInput = h('input', { class: 'input', placeholder: 'Новый витамин или добавка' });
-    const vitAddRow = h('form', { class: 'add-vit', hidden: true, onsubmit: (e) => {
-      e.preventDefault();
-      const name = vitInput.value.trim(); if (!name) return;
-      if (!vitaminsList().some((v) => v.toLowerCase() === name.toLowerCase())) update(SETTINGS_PATH, (data) => { if (!data.vitamins.includes(name)) data.vitamins.push(name); }, `Витамины: добавлен «${name}»`);
-      if (!draft.vitamins.includes(name)) draft.vitamins.push(name);
-      vitInput.value = ''; renderChips();
-    } }, vitInput, h('button', { class: 'btn', type: 'submit', text: 'Добавить' }));
-    function renderChips() {
-      chipBox.innerHTML = '';
-      const all = [...vitaminsList()];
-      for (const v of draft.vitamins) if (!all.includes(v)) all.push(v);
-      for (const v of all) {
-        const on = draft.vitamins.includes(v);
-        chipBox.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(on), onclick: () => {
-          if (editVits) {
-            confirmBox({ title: `Убрать «${v}» из списка?`, text: 'Из уже сделанных записей он не удалится.', okText: 'Убрать', danger: true,
-              onOk: () => { update(SETTINGS_PATH, (data) => { data.vitamins = data.vitamins.filter((x) => x !== v); }, `Витамины: убран «${v}»`); renderChips(); } });
-            return;
-          }
-          if (on) draft.vitamins = draft.vitamins.filter((x) => x !== v); else draft.vitamins.push(v);
-          renderChips();
-        } }, v, editVits && vitaminsList().includes(v) ? h('span', { class: 'x', text: '×' }) : null));
-      }
-      chipBox.append(h('button', { class: 'chip add', type: 'button', onclick: () => { vitAddRow.hidden = false; vitInput.focus(); } }, '+ добавить'));
-    }
-    renderChips();
+    // vitamins / medicines — same chip picker, separate lists
     const yesterday = dayRec(addDays(s, -1));
-    const sameAsYesterday = yesterday && (yesterday.vitamins || []).length
-      ? h('button', { class: 'btn ghost sm', type: 'button', title: (yesterday.vitamins || []).join(', '), onclick: () => { for (const v of yesterday.vitamins) if (!draft.vitamins.includes(v)) draft.vitamins.push(v); renderChips(); } }, 'Как вчера')
-      : null;
-    const editVitsBtn = h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { editVits = !editVits; editVitsBtn.textContent = editVits ? 'Готово' : 'Изменить список'; renderChips(); } }, 'Изменить список');
+    function chipSection({ key, title, dot, placeholder, label }) {
+      let editing = false;
+      const box = h('div', { class: 'chips ' + dot });
+      const input = h('input', { class: 'input', placeholder });
+      const addRow = h('form', { class: 'add-vit', hidden: true, onsubmit: (e) => {
+        e.preventDefault();
+        const name = input.value.trim(); if (!name) return;
+        if (!listOf(key).some((v) => v.toLowerCase() === name.toLowerCase())) update(SETTINGS_PATH, (data) => { data[key] ||= []; if (!data[key].includes(name)) data[key].push(name); }, `${label}: добавлено «${name}»`);
+        if (!draft[key].includes(name)) draft[key].push(name);
+        input.value = ''; render();
+      } }, input, h('button', { class: 'btn', type: 'submit', text: 'Добавить' }));
+      function render() {
+        box.innerHTML = '';
+        const all = [...listOf(key)];
+        for (const v of draft[key]) if (!all.includes(v)) all.push(v);
+        for (const v of all) {
+          const on = draft[key].includes(v);
+          box.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(on), onclick: () => {
+            if (editing) {
+              confirmBox({ title: `Убрать «${v}» из списка?`, text: 'Из уже сделанных записей не удалится.', okText: 'Убрать', danger: true,
+                onOk: () => { update(SETTINGS_PATH, (data) => { data[key] = (data[key] || []).filter((x) => x !== v); }, `${label}: убрано «${v}»`); render(); } });
+              return;
+            }
+            if (on) draft[key] = draft[key].filter((x) => x !== v); else draft[key].push(v);
+            render();
+          } }, v, editing && listOf(key).includes(v) ? h('span', { class: 'x', text: '×' }) : null));
+        }
+        box.append(h('button', { class: 'chip add', type: 'button', onclick: () => { addRow.hidden = false; input.focus(); } }, '+ добавить'));
+      }
+      render();
+      const prevList = yesterday && (yesterday[key] || []);
+      const same = prevList && prevList.length
+        ? h('button', { class: 'btn ghost sm', type: 'button', title: prevList.join(', '), onclick: () => { for (const v of prevList) if (!draft[key].includes(v)) draft[key].push(v); render(); } }, 'Как вчера')
+        : null;
+      const editBtn = h('button', { class: 'btn ghost sm', type: 'button', onclick: () => { editing = !editing; editBtn.textContent = editing ? 'Готово' : 'Изменить список'; render(); } }, 'Изменить список');
+      return h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot ' + dot }), title, h('span', { class: 'spacer' }), same, editBtn), box, addRow);
+    }
+    const vitSec = chipSection({ key: 'vitamins', title: 'Витамины и добавки', dot: 'vit', placeholder: 'Новый витамин или добавка', label: 'Витамины' });
+    const medSec = chipSection({ key: 'meds', title: 'Лекарства', dot: 'med', placeholder: 'Название лекарства', label: 'Лекарства' });
 
     // note
     const noteInput = h('textarea', { class: 'input', placeholder: 'Самочувствие, сон, питание, что угодно…', spellcheck: 'true', lang: 'ru', oninput: (e) => (draft.note = e.target.value) });
@@ -797,7 +813,8 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
       h('div', { class: 'day-body' },
         h('div', { class: 'sec' }, h('div', { class: 'sec-title', text: 'Вес' }), h('div', { class: 'weight-row' }, wInput, h('span', { class: 'hint', text: 'кг' }), wHint)),
         h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot gym' }), 'Тренировки', h('span', { class: 'spacer' }), addWk), wkList, dl),
-        h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot vit' }), 'Витамины и добавки', h('span', { class: 'spacer' }), sameAsYesterday, editVitsBtn), chipBox, vitAddRow),
+        vitSec,
+        medSec,
         h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot note' }), 'Заметка'), noteInput),
         h('div', { class: 'sec' }, h('div', { class: 'sec-title' }, h('i', { class: 'dot tdo' }), 'Дела на этот день'), dayTodoBox, tdForm)),
       h('div', { class: 'day-foot' }, delBtn, err, h('span', { class: 'spacer' }), cancelBtn, saveBtn));
@@ -830,6 +847,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 18px; height: 18px; m
     }).filter((w) => w.type || w.minutes || w.details).map((w) => (w.type ? w : { ...w, type: 'Тренировка' }));
     if (wk.length) out.workouts = wk;
     if ((r.vitamins || []).length) out.vitamins = [...r.vitamins];
+    if ((r.meds || []).length) out.meds = [...r.meds];
     if ((r.note || '').trim()) out.note = r.note.trim();
     return out;
   }
