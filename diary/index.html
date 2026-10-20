@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Diary — мемуары</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5efe4;--paper:#fffdf8;--ink:#2b2622;--muted:#7a6f63;--line:#e4dccd;
+  --accent:#a4472f;--accent-ink:#fff;--accent-soft:#f4e3da;--ok:#3d7a4f;--warn:#b7791f;--err:#c0392b;
+  --shadow:0 1px 3px rgba(60,40,20,.08),0 8px 24px rgba(60,40,20,.06);
+  --serif:'Lora',Georgia,'Times New Roman',serif;--sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1b1815;--paper:#24201c;--ink:#ece4d8;--muted:#a39787;--line:#3a332c;
+  --accent:#e07a5f;--accent-ink:#1b1815;--accent-soft:#3a2a24;--ok:#7fbf8f;--warn:#e0b25f;--err:#ef7b6b;--shadow:none}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.2px;margin-right:auto;display:flex;align-items:baseline;gap:10px}
+.brand small{font-family:var(--sans);font-size:13px;color:var(--muted);font-weight:400}
+.tabs{display:flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tab{border:0;background:transparent;padding:7px 16px;border-radius:999px;color:var(--muted);font-weight:500}
+.tab.on{background:var(--accent);color:var(--accent-ink)}
+.sync{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.sync[data-s=ok] i{background:var(--ok)}
+.sync[data-s=dirty] i,.sync[data-s=saving] i{background:var(--warn)}
+.sync[data-s=saving] i{animation:blink 1s infinite}
+.sync[data-s=error] i{background:var(--err)}
+@keyframes blink{50%{opacity:.3}}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);flex:1;min-width:180px}
+input[type=text],input[type=password],select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 13px;font-weight:500;font-size:14px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.danger{color:var(--err)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sm{padding:5px 9px;font-size:13px;border-radius:8px}
+textarea.prose{width:100%;min-height:280px;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--serif);font-size:17px;line-height:1.7;outline:none}
+
+/* login */
+.login{max-width:560px;margin:30px auto;padding:28px}
+.login h1{font-family:var(--serif);font-weight:600;font-size:28px;margin:0 0 6px}
+.login ol{padding-left:20px;margin:14px 0 20px;color:var(--muted);font-size:14px}
+.login ol li{margin-bottom:6px}
+.login code{background:var(--accent-soft);color:var(--ink);padding:1px 6px;border-radius:6px;font-size:13px}
+.err{color:var(--err);font-size:14px;min-height:20px;margin:8px 0}
+
+/* record */
+.rec-wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.rec-top{padding:16px}
+.rec-main{padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.mic{width:124px;height:124px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 6px 24px color-mix(in srgb,var(--accent) 35%,transparent);transition:transform .15s}
+.mic:active{transform:scale(.96)}
+.mic svg{width:46px;height:46px}
+.mic.rec{animation:pulse 1.6s infinite}
+.mic.paused{background:var(--muted)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 55%,transparent)}70%{box-shadow:0 0 0 22px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.timer{font-variant-numeric:tabular-nums;font-size:28px;font-weight:600;letter-spacing:1px}
+.status{font-size:14px;color:var(--muted);text-align:center;min-height:21px}
+.live{width:100%;padding:0 20px 20px}
+.interim{font-family:var(--serif);font-style:italic;color:var(--muted);min-height:26px;padding:6px 4px;font-size:16px}
+.opts{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.tips{padding:16px 20px;font-size:14px;color:var(--muted)}
+.tips summary{cursor:pointer;color:var(--ink);font-weight:500}
+.tips code{background:var(--accent-soft);color:var(--ink);padding:1px 6px;border-radius:6px;font-family:var(--sans);font-size:13px}
+.notice{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:14px}
+
+/* text */
+.text-grid{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.side{padding:12px;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto}
+.side-head{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 10px;gap:6px}
+.side-head b{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.chap{border-top:1px solid var(--line);padding:8px 0}
+.chap-h{display:flex;align-items:center;gap:4px;padding:2px 4px}
+.chap-t{flex:1;font-family:var(--serif);font-weight:600;font-size:16px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chap-t small{font-family:var(--sans);font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+.ic{border:0;background:transparent;color:var(--muted);padding:4px 6px;border-radius:6px;font-size:13px;line-height:1}
+.ic:hover{background:var(--accent-soft);color:var(--ink)}
+.frag{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;border-radius:8px;cursor:pointer;font-size:14px}
+.frag:hover{background:var(--bg)}
+.frag.on{background:var(--accent-soft)}
+.frag span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.dot.ed{background:var(--ok)}
+.frag em{font-style:normal;color:var(--muted);font-size:12px}
+.empty-chap{font-size:13px;color:var(--muted);padding:4px 12px}
+.pane{padding:20px;min-width:0}
+.pane h2{font-family:var(--serif);font-weight:600;margin:0 0 4px;font-size:24px}
+.ed-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.col-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px}
+.col-h b{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.meta{font-size:13px;color:var(--muted)}
+.saved{font-size:13px;color:var(--ok);transition:opacity .4s}
+audio{width:100%;height:40px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.stat{background:var(--bg);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:22px;font-family:var(--serif)}
+.stat span{font-size:12px;color:var(--muted)}
+.read{max-width:680px;margin:0 auto;font-family:var(--serif);font-size:18px;line-height:1.8}
+.read h1{font-size:30px;margin:6px 0 24px;font-weight:600}
+.read h3{font-size:15px;font-family:var(--sans);color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:1px;margin:34px 0 8px}
+.read p{margin:0 0 1em;text-indent:1.5em}
+.read .raw{color:var(--muted)}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:860px){
+  .text-grid{grid-template-columns:1fr}
+  .side{position:static;max-height:none}
+  .ed-cols{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:560px){
+  .brand small{display:none}
+  .pane{padding:16px}
+  .login{padding:20px;margin-top:12px}
+  textarea.prose{font-size:16px;padding:12px}
+  .sync span{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">Diary <small>книга воспоминаний</small></div>
+    <nav class="tabs hidden" id="tabs">
+      <button class="tab" data-tab="record">🎙 Запись</button>
+      <button class="tab" data-tab="text">📖 Текст</button>
+    </nav>
+    <button class="sync hidden" id="syncBtn" data-s="ok" title="Синхронизировать с GitHub"><i></i><span id="syncText">Сохранено</span></button>
+    <button class="ic hidden" id="logoutBtn" title="Выйти">Выйти</button>
+  </div>
+</header>
+
+<main>
+<!-- ============ ВХОД ============ -->
+<section id="sec-login" class="card login hidden">
+  <h1>Вход</h1>
+  <p class="muted" style="margin:0">Текст книги и записи голоса хранятся в вашем приватном репозитории на GitHub. Сайт открывает их по токену.</p>
+  <ol>
+    <li>Репозиторий с книгой — ваш <b>приватный</b> <code>diary</code>. Он может быть пустым.</li>
+    <li>Создайте токен: <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Fine-grained token</a> → Repository access: <i>Only select repositories</i> → выберите этот репозиторий → Permissions → <b>Contents: Read and write</b>.</li>
+    <li>Вставьте имя репозитория и токен ниже.</li>
+  </ol>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <label class="f">Репозиторий с данными
+      <input type="text" id="lgRepo" placeholder="KryukovMikhail/diary" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="f">Токен
+      <input type="password" id="lgToken" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="row" style="font-size:14px;color:var(--muted);cursor:pointer;gap:8px"><input type="checkbox" id="lgRemember" checked> Запомнить на этом устройстве</label>
+  </div>
+  <div class="err" id="lgErr"></div>
+  <button class="btn pri" id="lgBtn" style="width:100%;justify-content:center;padding:11px">Войти</button>
+  <p class="meta" style="margin:14px 0 0">Токен хранится только в браузере этого устройства и отправляется только в GitHub. На чужом компьютере снимите галочку «Запомнить».</p>
+</section>
+
+<!-- ============ ЗАПИСЬ ============ -->
+<section id="sec-record" class="rec-wrap hidden">
+  <div class="card rec-top">
+    <div class="row">
+      <label class="f">Глава
+        <select id="recChapter"></select>
+      </label>
+      <label class="f">Название фрагмента
+        <input type="text" id="recTitle" placeholder="Например: Первый день в школе">
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="rec-main">
+      <button class="mic" id="micBtn" aria-label="Начать запись">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="micIcon"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>
+      </button>
+      <div class="timer" id="timer">00:00</div>
+      <div class="status" id="status">Нажмите на микрофон и начинайте рассказывать</div>
+      <div class="opts">
+        <label><input type="checkbox" id="optAudio" checked> Сохранять аудио</label>
+        <label><input type="checkbox" id="optCmds" checked> Голосовые команды пунктуации</label>
+      </div>
+      <div id="srNotice" class="notice hidden"></div>
+    </div>
+    <div class="live">
+      <textarea class="prose" id="liveText" placeholder="Здесь появится текст. Его можно править прямо во время записи."></textarea>
+      <div class="interim" id="interim"></div>
+      <div class="row" style="justify-content:space-between">
+        <span class="meta" id="liveCount">0 слов</span>
+        <div class="row">
+          <button class="btn" id="clearBtn">Сбросить</button>
+          <button class="btn pri" id="saveBtn">Сохранить фрагмент</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="card tips">
+    <summary>Подсказки</summary>
+    <p><b>Команды голосом:</b> <code>точка</code> <code>запятая</code> <code>вопросительный знак</code> <code>восклицательный знак</code> <code>двоеточие</code> <code>тире</code> <code>многоточие</code> <code>открыть кавычки</code> / <code>закрыть кавычки</code> <code>новый абзац</code>. Если мешают (например, «точка зрения»), выключите галочку выше.</p>
+    <p><b>Где работает лучше всего:</b> Chrome или Edge на компьютере, Chrome на Android. На iPhone — Safari. Распознаванию нужен интернет. Аудио пишется и без него.</p>
+    <p><b>Как рассказывать:</b> один фрагмент — один эпизод. Говорите как другу, причешете потом в разделе «Текст». Кнопка микрофона ставит запись на паузу, повторное нажатие продолжает.</p>
+    <p><b>Где хранится:</b> после сохранения фрагмент уходит в ваш репозиторий на GitHub (индикатор справа вверху). Если интернета нет, он подождёт на устройстве и отправится сам, когда связь появится.</p>
+  </details>
+</section>
+
+<!-- ============ ТЕКСТ ============ -->
+<section id="sec-text" class="hidden">
+  <div class="text-grid">
+    <aside class="card side">
+      <div class="side-head">
+        <b>Главы</b>
+        <div class="row" style="gap:4px">
+          <button class="btn sm" id="homeBtn" title="Обзор и экспорт">Обзор</button>
+          <button class="btn sm pri" id="addChapBtn">+ Глава</button>
+        </div>
+      </div>
+      <div id="chapList"></div>
+    </aside>
+    <div class="card pane" id="pane"></div>
+  </div>
+</section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= Локальное хранилище (IndexedDB) ================= */
+const DB = {
+  db: null,
+  open() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('diary-db', 2);
+      r.onupgradeneeded = () => {
+        const d = r.result;
+        if (!d.objectStoreNames.contains('kv')) d.createObjectStore('kv');                        // кэш книги
+        if (!d.objectStoreNames.contains('pending')) d.createObjectStore('pending', { keyPath: 'id' }); // аудио, ещё не отправленное
+        if (!d.objectStoreNames.contains('audioCache')) d.createObjectStore('audioCache', { keyPath: 'id' });
+      };
+      r.onsuccess = () => { this.db = r.result; res(); };
+      r.onerror = () => rej(r.error);
+    });
+  },
+  has(s) { return this.db.objectStoreNames.contains(s); },
+  req(store, mode, fn) {
+    return new Promise((res, rej) => {
+      const r = fn(this.db.transaction(store, mode).objectStore(store));
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  },
+  all(s) { return this.req(s, 'readonly', o => o.getAll()); },
+  get(s, id) { return this.req(s, 'readonly', o => o.get(id)); },
+  put(s, v, key) { return this.req(s, 'readwrite', o => key === undefined ? o.put(v) : o.put(v, key)); },
+  del(s, id) { return this.req(s, 'readwrite', o => o.delete(id)); },
+  clear(s) { return this.req(s, 'readwrite', o => o.clear()); }
+};
+
+/* ================= Утилиты ================= */
+const $ = id => document.getElementById(id);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const words = s => (String(s || '').match(/\p{L}[\p{L}\p{N}'’-]*/gu) || []).length;
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return n + ' ' + (m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 10 || h >= 20) ? b : c); };
+const wordsLabel = n => plural(n, 'слово', 'слова', 'слов');
+const fmtTime = s => { s = Math.round(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ':' : '') + String(m).padStart(2, '0') + ':' + String(x).padStart(2, '0'); };
+const fmtDate = t => new Date(t).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const fileSafe = s => String(s).replace(/[\\/:*?"<>|]+/g, '').trim() || 'diary';
+let toastT;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2800); }
+function download(name, data, type = 'text/plain;charset=utf-8') {
+  const blob = data instanceof Blob ? data : new Blob([data], { type });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  toast('Скопировано');
+}
+const lsGet = (k, d) => { try { return localStorage.getItem(k) ?? d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+const blobToB64 = b => new Promise((r, j) => { const fr = new FileReader(); fr.onload = () => r(String(fr.result).split(',')[1] || ''); fr.onerror = () => j(fr.error); fr.readAsDataURL(b); });
+const AUDIO_MIME = { webm: 'audio/webm', m4a: 'audio/mp4', ogg: 'audio/ogg' };
+const extOf = type => /mp4|m4a|aac/.test(type) ? 'm4a' : /ogg/.test(type) ? 'ogg' : 'webm';
+
+/* ================= Обработка текста ================= */
+const L = '\\p{L}';
+const cmd = phrase => new RegExp('[ \\t]*(?<!' + L + ')(?:' + phrase + ')(?!' + L + ')', 'giu');
+const COMMANDS = [
+  [cmd('новый абзац|новая строка|с новой строки|абзац'), '\n\n'],
+  [cmd('вопросительный знак'), '?'],
+  [cmd('восклицательный знак'), '!'],
+  [cmd('многоточие'), '…'],
+  [cmd('точка с запятой'), ';'],
+  [cmd('двоеточие'), ':'],
+  [cmd('точка'), '.'],
+  [cmd('запятая'), ','],
+  [cmd('тире'), ' —'],
+  [cmd('открыть кавычки|открыть кавычку|открываем кавычки'), ' «'],
+  [cmd('закрыть кавычки|закрыть кавычку|закрываем кавычки'), '»'],
+];
+function applyCommands(s) {
+  for (const [re, rep] of COMMANDS) s = s.replace(re, rep);
+  return s.replace(/«\s+/g, '«').replace(/\n\n[ \t]+/g, '\n\n');
+}
+function capSentences(s) {
+  return s.replace(/(^\s*|[.!?…]\s+|\n\s*|[.!?…]\s*«)(\p{Ll})/gu, (m, p, c) => p + c.toUpperCase());
+}
+function joinText(a, b) {
+  b = b.replace(/^[ \t]+|[ \t]+$/g, '');
+  if (!b) return a;
+  if (!a.trim()) return capSentences(b.replace(/^[\s,.;:]+/, ''));
+  let out;
+  if (/^[.,!?:;…»]/.test(b)) out = a.replace(/[ \t]+$/, '') + b;
+  else if (/\n$/.test(a) || /^\n/.test(b)) out = a.replace(/[ \t]+$/, '') + b;
+  else out = a.replace(/[ \t]+$/, '') + ' ' + b;
+  return capSentences(out.replace(/[ \t]+\n/g, '\n'));
+}
+function tidy(s) {
+  s = String(s || '').replace(/\r/g, '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/ *\n */g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/ +([.,!?:;…»)])/g, '$1')
+    .replace(/([«(]) +/g, '$1')
+    .replace(/,+/g, ',')
+    .replace(/,(\s*[.!?…])/g, '$1')
+    .replace(/(^|\n)[ ,;:]+/g, '$1')
+    .replace(/([.!?…]) *,/g, '$1')
+    .replace(/([,;:])(?=[^\s\d»)\n])/gu, '$1 ')
+    .replace(/([.!?…])(?=\p{Lu})/gu, '$1 ')
+    .replace(/ - /g, ' — ').replace(/--/g, '—')
+    .replace(/ {2,}/g, ' ')
+    .trim();
+  return capSentences(s);
+}
+const FILLERS = ['э+', 'ээ+', 'м-?м+', 'ну', 'как бы', 'короче', 'типа', 'так сказать', 'это самое', 'в общем-то', 'собственно говоря', 'как его', 'значит так'];
+function removeFillers(s) {
+  const re = new RegExp('(?<!' + L + ')(?:' + FILLERS.join('|') + ')(?!' + L + '),?', 'giu');
+  s = s.replace(re, '');
+  s = s.replace(/(?<!\p{L})(\p{L}+)(?:[ ,]+\1)+(?!\p{L})/giu, '$1');
+  return tidy(s);
+}
+function toParagraphs(s, n = 4) {
+  return tidy(s).split(/\n{2,}/).map(p => {
+    const sent = p.replace(/\n/g, ' ').match(/[^.!?…]+(?:[.!?…]+[»)]?|$)\s*/g) || [p];
+    if (sent.length <= n + 1) return p;
+    const out = [];
+    for (let i = 0; i < sent.length; i += n) out.push(sent.slice(i, i + n).join('').trim());
+    return out.filter(Boolean).join('\n\n');
+  }).join('\n\n');
+}
+
+/* ================= Книга (данные) =================
+   Вся книга — один документ book.json в приватном репозитории:
+   { title, titleUpdated, chapters:[{id,title,order,updated}], fragments:[{id,chapterId,title,raw,edited,order,created,updated,duration,hasAudio,audioExt}], deleted:{id:ts} }
+   Рядом лежат book.md (читаемая версия) и audio/<id>.<ext>. */
+const emptyDoc = () => ({ app: 'diary', version: 2, title: 'Мемуары', titleUpdated: 0, chapters: [], fragments: [], deleted: {} });
+let doc = emptyDoc();
+let localRev = 0, lastAction = '';
+
+function normalize(d) {
+  const e = emptyDoc();
+  d = d && typeof d === 'object' ? d : {};
+  return {
+    ...e, title: d.title || e.title, titleUpdated: d.titleUpdated || 0,
+    chapters: Array.isArray(d.chapters) ? d.chapters : [],
+    fragments: Array.isArray(d.fragments) ? d.fragments : [],
+    deleted: d.deleted && typeof d.deleted === 'object' ? d.deleted : {}
+  };
+}
+function mergeDocs(a, b) {   // a — локальная версия, b — из репозитория; побеждает более свежая правка каждой записи
+  const deleted = { ...b.deleted };
+  for (const [k, v] of Object.entries(a.deleted)) deleted[k] = Math.max(v, deleted[k] || 0);
+  const list = (la, lb) => {
+    const m = new Map();
+    for (const x of lb) m.set(x.id, x);
+    for (const x of la) { const y = m.get(x.id); if (!y || (x.updated || 0) >= (y.updated || 0)) m.set(x.id, x); }
+    return [...m.values()].filter(x => !(deleted[x.id] >= (x.updated || 0)));
+  };
+  const aT = (a.titleUpdated || 0) >= (b.titleUpdated || 0);
+  const m = {
+    app: 'diary', version: 2, title: aT ? a.title : b.title, titleUpdated: Math.max(a.titleUpdated || 0, b.titleUpdated || 0),
+    chapters: list(a.chapters, b.chapters), fragments: list(a.fragments, b.fragments), deleted
+  };
+  fixup(m); return m;
+}
+function fixup(d) {
+  if (!d.chapters.length) d.chapters.push({ id: uid(), title: 'Черновики', order: 0, updated: 1 });
+  const ids = new Set(d.chapters.map(c => c.id));
+  for (const f of d.fragments) if (!ids.has(f.chapterId)) f.chapterId = d.chapters[0].id;
+  d.chapters.sort((a, b) => a.order - b.order);
+  d.fragments.sort((a, b) => a.order - b.order || a.created - b.created);
+}
+function canon(d) {   // стабильное представление для сравнения «изменилось ли»
+  const sortKeys = o => Array.isArray(o) ? o.map(sortKeys) : o && typeof o === 'object' ? Object.keys(o).sort().reduce((r, k) => (r[k] = sortKeys(o[k]), r), {}) : o;
+  const c = sortKeys(d);
+  c.chapters.sort((x, y) => x.id < y.id ? -1 : 1); c.fragments.sort((x, y) => x.id < y.id ? -1 : 1);
+  return JSON.stringify(c);
+}
+
+const fragsOf = cid => doc.fragments.filter(f => f.chapterId === cid);
+const chapById = id => doc.chapters.find(c => c.id === id);
+const fragById = id => doc.fragments.find(f => f.id === id);
+const textOf = f => (f.edited && f.edited.trim()) ? f.edited : (f.raw || '');
+const isEdited = f => !!(f.edited && f.edited.trim());
+
+let localT;
+function changed(action, syncDelay = 4000) {
+  localRev++; if (action) lastAction = action;
+  clearTimeout(localT); localT = setTimeout(saveLocal, 300);
+  scheduleSync(syncDelay);
+}
+function touch(x, action, delay) { x.updated = Date.now(); changed(action, delay); }
+function saveLocal() { if (auth) DB.put('kv', { doc, rev: localRev, savedAt: Date.now() }, 'doc:' + auth.repo).catch(() => {}); }
+
+function addChapter(title) {
+  title = (title || '').trim(); if (!title) return null;
+  const c = { id: uid(), title, order: doc.chapters.length ? Math.max(...doc.chapters.map(x => x.order)) + 1 : 0, updated: Date.now() };
+  doc.chapters.push(c); fixup(doc); changed('Новая глава: ' + title, 1500); fillChapterSelect(c.id);
+  return c;
+}
+
+/* ================= GitHub ================= */
+let auth = null;   // { token, repo, branch }
+function loadAuth() {
+  for (const st of ['sessionStorage', 'localStorage']) { try { const v = window[st].getItem('diary-auth'); if (v) return JSON.parse(v); } catch {} }
+  return null;
+}
+function storeAuth(a, remember) { try { (remember ? localStorage : sessionStorage).setItem('diary-auth', JSON.stringify(a)); } catch {} }
+function clearAuth() { try { localStorage.removeItem('diary-auth'); sessionStorage.removeItem('diary-auth'); } catch {} }
+
+async function gh(path, opt = {}) {
+  const headers = { Authorization: 'Bearer ' + auth.token, Accept: opt.accept || 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  if (opt.body) headers['Content-Type'] = 'application/json';
+  let r;
+  try { r = await fetch('https://api.github.com' + path, { method: opt.method || 'GET', headers, body: opt.body, cache: 'no-store' }); }
+  catch (e) { const err = new Error('Нет связи с GitHub'); err.status = 0; throw err; }
+  if (!r.ok) {
+    const err = new Error(r.status === 401 ? 'Токен не подошёл: неверный или истёк срок' : r.status === 404 ? 'Репозиторий не найден или токен не даёт к нему доступа' : r.status === 403 ? 'Нет прав (у токена должно быть Contents: Read and write)' : 'GitHub ответил ошибкой ' + r.status);
+    err.status = r.status; err.body = await r.text().catch(() => ''); throw err;
+  }
+  if (opt.raw === 'text') return r.text();
+  if (opt.raw === 'blob') return r.blob();
+  return r.status === 204 ? null : r.json();
+}
+const R = () => auth.repo, B = () => encodeURIComponent(auth.branch);
+
+async function initRepo() {   // пустой репозиторий: создаём первый коммит
+  const text = '# Diary\n\nДанные книги воспоминаний для сайта diary. Текст — в `book.json` и `book.md`, записи голоса — в папке `audio/`.\n';
+  await gh(`/repos/${R()}/contents/README.md`, { method: 'PUT', body: JSON.stringify({ message: 'Diary: начало книги', content: btoa(unescape(encodeURIComponent(text))) }) });
+  const info = await gh(`/repos/${R()}`); auth.branch = info.default_branch || 'main';
+}
+
+let syncing = false, syncAgain = false, syncTimer = null, retryTimer = null, remoteSha = null, remoteDoc = null, synced = true;
+function setSync(s, text) {
+  const b = $('syncBtn'); b.dataset.s = s;
+  $('syncText').textContent = text || { ok: 'Сохранено', dirty: 'Не сохранено', saving: 'Сохраняю…', error: 'Ошибка' }[s];
+  b.title = s === 'error' ? (text || '') + ' — нажмите, чтобы повторить' : 'Синхронизировать с GitHub';
+}
+function scheduleSync(ms = 4000) {
+  synced = false; setSync('dirty');
+  clearTimeout(syncTimer); syncTimer = setTimeout(sync, ms);
+}
+async function sync() {
+  clearTimeout(syncTimer); clearTimeout(retryTimer);
+  if (!auth) return;
+  if (syncing) { syncAgain = true; return; }
+  syncing = true; setSync('saving');
+  const rev = localRev;
+  try {
+    let done = false;
+    for (let attempt = 0; attempt < 4 && !done; attempt++) {
+      let head;
+      try { head = (await gh(`/repos/${R()}/git/ref/heads/${B()}`)).object.sha; }
+      catch (e) { if (e.status === 409 || e.status === 404) { await initRepo(); continue; } throw e; }
+      const commit = await gh(`/repos/${R()}/git/commits/${head}`);
+      const tree = await gh(`/repos/${R()}/git/trees/${commit.tree.sha}?recursive=1`);
+      const entry = tree.tree.find(x => x.path === 'book.json');
+      let remote = emptyDoc();
+      if (entry) remote = (entry.sha === remoteSha && remoteDoc) ? remoteDoc : normalize(JSON.parse(await gh(`/repos/${R()}/git/blobs/${entry.sha}`, { accept: 'application/vnd.github.raw', raw: 'text' })));
+      const merged = mergeDocs(doc, remote);
+      const pend = (await DB.all('pending')).filter(p => !merged.deleted[p.id] && merged.fragments.some(f => f.id === p.id));
+      const dead = tree.tree.filter(x => x.type === 'blob' && x.path.startsWith('audio/') && merged.deleted[x.path.slice(6).replace(/\.[^.]+$/, '')]);
+      const needsWrite = !entry || canon(merged) !== canon(remote) || pend.length || dead.length;
+      if (!needsWrite) { applyMerged(merged, entry?.sha); done = true; break; }
+
+      const items = [
+        { path: 'book.json', mode: '100644', type: 'blob', content: JSON.stringify(merged, null, 1) },
+        { path: 'book.md', mode: '100644', type: 'blob', content: bookText(true, merged) }
+      ];
+      for (const p of pend) {
+        const b = await gh(`/repos/${R()}/git/blobs`, { method: 'POST', body: JSON.stringify({ content: await blobToB64(p.blob), encoding: 'base64' }) });
+        items.push({ path: `audio/${p.id}.${p.ext}`, mode: '100644', type: 'blob', sha: b.sha });
+      }
+      for (const d of dead) items.push({ path: d.path, mode: '100644', type: 'blob', sha: null });
+      const nt = await gh(`/repos/${R()}/git/trees`, { method: 'POST', body: JSON.stringify({ base_tree: commit.tree.sha, tree: items }) });
+      const nc = await gh(`/repos/${R()}/git/commits`, { method: 'POST', body: JSON.stringify({ message: 'Diary: ' + (lastAction || 'обновление'), tree: nt.sha, parents: [head] }) });
+      try { await gh(`/repos/${R()}/git/refs/heads/${B()}`, { method: 'PATCH', body: JSON.stringify({ sha: nc.sha, force: false }) }); }
+      catch (e) { if (e.status === 422 || e.status === 409) continue; throw e; }   // кто-то сохранил с другого устройства — повторим со слиянием
+      lastAction = '';
+      for (const p of pend) { await DB.put('audioCache', { id: p.id, blob: p.blob }); await DB.del('pending', p.id); }
+      const ne = nt.tree.find(x => x.path === 'book.json');
+      applyMerged(merged, ne?.sha);
+      done = true;
+    }
+    if (!done) throw new Error('Не удалось сохранить: слишком много одновременных изменений');
+    if (localRev === rev) { synced = true; setSync('ok', 'Сохранено ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })); }
+    else scheduleSync(1500);
+  } catch (e) {
+    console.error(e);
+    if (e.status === 401) { setSync('error', 'Токен недействителен'); toast('Токен больше не действует. Выйдите и войдите с новым токеном.'); }
+    else { setSync('error', e.status === 0 ? 'Нет связи' : 'Ошибка'); retryTimer = setTimeout(sync, 30000); }
+  } finally {
+    syncing = false;
+    if (syncAgain) { syncAgain = false; sync(); }
+  }
+}
+function applyMerged(m, sha) {
+  remoteDoc = m; remoteSha = sha || null;
+  const before = canon(doc);
+  doc = mergeDocs(doc, m);   // правки, сделанные во время сохранения, не теряются
+  saveLocal();
+  if (canon(doc) !== before) refreshUI();
+}
+function refreshUI() {
+  fillChapterSelect();
+  if (!$('sec-text').classList.contains('hidden')) {
+    renderSide();
+    const editing = view.type === 'frag' && document.activeElement && /fRaw|fEd|fTitle/.test(document.activeElement.id);
+    if (!editing) renderPane();
+  }
+}
+async function getAudio(f) {
+  const a = (await DB.get('pending', f.id)) || (await DB.get('audioCache', f.id));
+  if (a) return a.blob;
+  const raw = await gh(`/repos/${R()}/contents/audio/${f.id}.${f.audioExt || 'webm'}?ref=${B()}`, { accept: 'application/vnd.github.raw', raw: 'blob' });
+  const blob = new Blob([raw], { type: AUDIO_MIME[f.audioExt] || 'audio/webm' });
+  DB.put('audioCache', { id: f.id, blob }).catch(() => {});
+  return blob;
+}
+
+/* ================= Вход ================= */
+async function doLogin() {
+  const btn = $('lgBtn'); $('lgErr').textContent = '';
+  let repo = $('lgRepo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').replace(/\/+$/, '');
+  const token = $('lgToken').value.trim();
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { $('lgErr').textContent = 'Укажите репозиторий в виде владелец/название'; return; }
+  if (!token) { $('lgErr').textContent = 'Вставьте токен'; return; }
+  btn.disabled = true; btn.textContent = 'Проверяю…';
+  try {
+    auth = { token, repo };
+    const info = await gh(`/repos/${repo}`);
+    if (info.permissions && !info.permissions.push) throw new Error('У токена нет права записи. Нужно Contents: Read and write.');
+    auth.branch = info.default_branch || 'main';
+    auth.repo = info.full_name || repo;
+    storeAuth(auth, $('lgRemember').checked);
+    lsSet('diary-lastRepo', auth.repo);
+    $('lgToken').value = '';
+    if (!info.private) toast('Внимание: репозиторий публичный — текст книги будет виден всем');
+    await startApp();
+  } catch (e) {
+    auth = null; $('lgErr').textContent = e.message;
+  } finally { btn.disabled = false; btn.textContent = 'Войти'; }
+}
+$('lgBtn').onclick = doLogin;
+$('lgToken').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+$('logoutBtn').onclick = async () => {
+  const pend = await DB.all('pending');
+  const warn = (!synced || pend.length) ? 'Есть изменения, которые ещё не сохранены в GitHub — при выходе они пропадут. ' : '';
+  if (!confirm(warn + 'Выйти? Токен и локальная копия книги будут удалены с этого устройства.')) return;
+  clearAuth();
+  try { await DB.clear('kv'); await DB.clear('pending'); await DB.clear('audioCache'); } catch {}
+  location.hash = ''; location.reload();
+};
+$('syncBtn').onclick = () => sync();
+
+function showLogin() {
+  ['sec-record', 'sec-text', 'tabs', 'syncBtn', 'logoutBtn'].forEach(id => $(id).classList.add('hidden'));
+  $('sec-login').classList.remove('hidden');
+  $('lgRepo').value = lsGet('diary-lastRepo', '') || 'KryukovMikhail/diary';
+}
+async function startApp() {
+  $('sec-login').classList.add('hidden');
+  ['tabs', 'syncBtn', 'logoutBtn'].forEach(id => $(id).classList.remove('hidden'));
+  const cached = await DB.get('kv', 'doc:' + auth.repo).catch(() => null);
+  doc = normalize(cached?.doc); fixup(doc);
+  await migrateOld();
+  fillChapterSelect(); route();
+  setSync('saving', 'Загружаю…');
+  sync();
+}
+async function migrateOld() {   // перенос фрагментов из первой версии сайта (хранились только в браузере)
+  if (!DB.has('fragments')) return;
+  try {
+    const [oc, of, oa] = await Promise.all([DB.all('chapters'), DB.all('fragments'), DB.all('audio')]);
+    if (!of.length && !oc.length) return;
+    const now = Date.now();
+    for (const c of oc) if (!chapById(c.id) && !doc.deleted[c.id]) doc.chapters.push({ id: c.id, title: c.title, order: c.order + 1000, updated: now });
+    for (const f of of) if (!fragById(f.id) && !doc.deleted[f.id]) {
+      const a = oa.find(x => x.id === f.id);
+      doc.fragments.push({ id: f.id, chapterId: f.chapterId, title: f.title, raw: f.raw || '', edited: f.edited || '', order: f.order, created: f.created, updated: now, duration: f.duration || 0, hasAudio: !!a, audioExt: a ? extOf(a.blob.type) : '' });
+      if (a) await DB.put('pending', { id: f.id, blob: a.blob, ext: extOf(a.blob.type) });
+    }
+    fixup(doc);
+    await Promise.all(['chapters', 'fragments', 'audio'].map(s => DB.clear(s)));
+    if (of.length) { toast(`Перенесено фрагментов с этого устройства: ${of.length}`); changed('перенос записей с устройства', 500); }
+  } catch (e) { console.error(e); }
+}
+
+/* ================= Навигация ================= */
+let view = { type: 'home' };
+function route() {
+  if (!auth) return;
+  const tab = location.hash.startsWith('#text') ? 'text' : 'record';
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  $('sec-record').classList.toggle('hidden', tab !== 'record');
+  $('sec-text').classList.toggle('hidden', tab !== 'text');
+  if (tab === 'text') {
+    const m = location.hash.match(/^#text\/(frag|read)\/(.+)$/);
+    view = m ? { type: m[1], id: m[2] } : { type: 'home' };
+    renderSide(); renderPane();
+  }
+}
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => { location.hash = b.dataset.tab; });
+
+/* ================= ЗАПИСЬ ================= */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let state = 'idle';
+let rec = null, srBlocked = false, lastFinal = '';
+let mediaRec = null, stream = null, chunks = [], audioType = '';
+let elapsed = 0, tickStart = 0, timerId = null, wakeLock = null;
+
+function fillChapterSelect(selectId) {
+  const sel = $('recChapter'); const cur = selectId || sel.value || lsGet('diary-lastChapter', '');
+  sel.innerHTML = doc.chapters.map(c => `<option value="${c.id}">${esc(c.title)}</option>`).join('') + '<option value="__new">+ Новая глава…</option>';
+  sel.value = chapById(cur) ? cur : (doc.chapters[0]?.id || '');
+}
+$('recChapter').onchange = e => {
+  if (e.target.value === '__new') { const c = addChapter(prompt('Название новой главы:', '')); fillChapterSelect(c ? c.id : undefined); }
+  lsSet('diary-lastChapter', $('recChapter').value);
+};
+
+function setStatus(t) { $('status').textContent = t; }
+function updateTimer() { const t = elapsed + (state === 'rec' ? (Date.now() - tickStart) / 1000 : 0); $('timer').textContent = fmtTime(t); }
+function updateCount() { $('liveCount').textContent = wordsLabel(words($('liveText').value)); }
+function setMicUI() {
+  const b = $('micBtn');
+  b.classList.toggle('rec', state === 'rec'); b.classList.toggle('paused', state === 'paused');
+  $('micIcon').innerHTML = state === 'rec'
+    ? '<rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/>'
+    : '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/>';
+  b.setAttribute('aria-label', state === 'rec' ? 'Пауза' : state === 'paused' ? 'Продолжить' : 'Начать запись');
+  $('optAudio').disabled = state !== 'idle';
+}
+function appendFinal(t) {
+  t = t.trim(); if (!t) return;
+  if (lastFinal && t.toLowerCase().startsWith(lastFinal.toLowerCase())) { const full = t; t = t.slice(lastFinal.length).trim(); lastFinal = full; }
+  else lastFinal = t;
+  if (!t) return;
+  if ($('optCmds').checked) t = applyCommands(t);
+  const ta = $('liveText');
+  ta.value = joinText(ta.value, t);
+  ta.scrollTop = ta.scrollHeight;
+  updateCount(); saveDraft();
+}
+function makeRec() {
+  const r = new SR();
+  r.lang = 'ru-RU'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
+  lastFinal = '';
+  r.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const res = e.results[i];
+      if (res.isFinal) appendFinal(res[0].transcript); else interim += res[0].transcript;
+    }
+    $('interim').textContent = interim;
+  };
+  r.onerror = e => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+      srBlocked = true;
+      setStatus(mediaRec ? 'Распознавание недоступно — записывается только аудио' : 'Нет доступа к микрофону. Разрешите его в настройках браузера.');
+    } else if (e.error === 'network') setStatus('Нет связи с сервисом распознавания' + (mediaRec ? ' — аудио продолжает записываться' : ''));
+  };
+  r.onend = () => {
+    $('interim').textContent = '';
+    if (state === 'rec' && !srBlocked) setTimeout(() => { if (state === 'rec') { try { rec = makeRec(); rec.start(); } catch {} } }, 200);
+  };
+  return r;
+}
+async function startRec() {
+  srBlocked = false;
+  if ($('optAudio').checked && window.MediaRecorder && navigator.mediaDevices?.getUserMedia) {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      audioType = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find(t => MediaRecorder.isTypeSupported?.(t)) || '';
+      mediaRec = new MediaRecorder(stream, audioType ? { mimeType: audioType } : undefined);
+      audioType = mediaRec.mimeType || audioType || 'audio/webm';
+      chunks = []; mediaRec.ondataavailable = e => e.data.size && chunks.push(e.data);
+      mediaRec.start(1000);
+    } catch {
+      mediaRec = null; stream = null;
+      if (!SR) { setStatus('Нет доступа к микрофону. Разрешите его в настройках браузера.'); return; }
+    }
+  }
+  if (!SR && !mediaRec) { setStatus('Браузер не умеет ни распознавать речь, ни записывать звук'); return; }
+  state = 'rec'; tickStart = Date.now();
+  if (SR) { try { rec = makeRec(); rec.start(); } catch {} }
+  timerId = setInterval(updateTimer, 500);
+  setStatus(SR ? 'Слушаю… говорите' : 'Идёт запись аудио (распознавание в этом браузере недоступно)');
+  try { wakeLock = await navigator.wakeLock?.request('screen'); } catch {}
+  setMicUI();
+}
+function pauseRec() {
+  if (state !== 'rec') return;
+  elapsed += (Date.now() - tickStart) / 1000; state = 'paused';
+  try { rec?.stop(); } catch {}
+  if (mediaRec?.state === 'recording') mediaRec.pause();
+  clearInterval(timerId); updateTimer();
+  setStatus('Пауза. Нажмите микрофон, чтобы продолжить');
+  try { wakeLock?.release(); } catch {} wakeLock = null;
+  setMicUI();
+}
+async function resumeRec() {
+  state = 'rec'; tickStart = Date.now(); srBlocked = false;
+  if (SR) { try { rec = makeRec(); rec.start(); } catch {} }
+  if (mediaRec?.state === 'paused') mediaRec.resume();
+  timerId = setInterval(updateTimer, 500);
+  setStatus('Слушаю… говорите');
+  try { wakeLock = await navigator.wakeLock?.request('screen'); } catch {}
+  setMicUI();
+}
+function finishAudio() {
+  return new Promise(res => {
+    const done = () => { cleanupStream(); res(chunks.length ? new Blob(chunks, { type: audioType }) : null); };
+    if (!mediaRec || mediaRec.state === 'inactive') return done();
+    mediaRec.onstop = done; mediaRec.stop();
+  });
+}
+function cleanupStream() { stream?.getTracks().forEach(t => t.stop()); stream = null; }
+function resetRecorder() {
+  state = 'idle'; elapsed = 0; clearInterval(timerId);
+  mediaRec = null; chunks = []; rec = null;
+  $('liveText').value = ''; $('interim').textContent = ''; $('recTitle').value = '';
+  $('timer').textContent = '00:00'; setStatus('Нажмите на микрофон и начинайте рассказывать');
+  updateCount(); setMicUI(); lsSet('diary-draft', '');
+}
+$('micBtn').onclick = () => state === 'idle' ? startRec() : state === 'rec' ? pauseRec() : resumeRec();
+
+$('saveBtn').onclick = async () => {
+  if (state === 'rec') { pauseRec(); await new Promise(r => setTimeout(r, 700)); }
+  const duration = Math.round(elapsed);
+  const blob = await finishAudio();
+  const raw = tidy($('liveText').value);
+  if (!raw && !blob) { toast('Пока нечего сохранять'); return; }
+  let cid = $('recChapter').value;
+  if (!chapById(cid)) cid = doc.chapters[0].id;
+  const now = Date.now(), fs = fragsOf(cid);
+  const title = $('recTitle').value.trim() || 'Фрагмент от ' + new Date().toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const f = {
+    id: uid(), chapterId: cid, title, raw, edited: '',
+    order: fs.length ? Math.max(...fs.map(x => x.order)) + 1 : 0,
+    created: now, updated: now, duration, hasAudio: !!blob, audioExt: blob ? extOf(blob.type) : ''
+  };
+  if (blob) await DB.put('pending', { id: f.id, blob, ext: f.audioExt });
+  doc.fragments.push(f); fixup(doc);
+  changed('новый фрагмент «' + title + '»', 300);
+  resetRecorder();
+  toast(`Сохранено в главу «${chapById(cid).title}»`);
+};
+$('clearBtn').onclick = async () => {
+  if (($('liveText').value.trim() || state !== 'idle') && !confirm('Сбросить текущую запись? Текст и аудио не сохранятся.')) return;
+  try { rec?.abort(); } catch {}
+  state = 'idle'; await finishAudio(); resetRecorder();
+};
+let draftT;
+function saveDraft() { clearTimeout(draftT); draftT = setTimeout(() => lsSet('diary-draft', $('liveText').value), 400); }
+$('liveText').addEventListener('input', () => { updateCount(); saveDraft(); });
+window.addEventListener('beforeunload', e => { if (state !== 'idle' || !synced) { e.preventDefault(); e.returnValue = ''; } });
+document.addEventListener('visibilitychange', () => { if (document.hidden && auth && !synced) sync(); });
+window.addEventListener('online', () => { if (auth && !synced) sync(); });
+
+/* ================= ТЕКСТ ================= */
+let undoStack = {};
+
+function renderSide() {
+  const cs = doc.chapters;
+  $('chapList').innerHTML = cs.map((c, i) => {
+    const fs = fragsOf(c.id);
+    const w = fs.reduce((s, f) => s + words(textOf(f)), 0);
+    return `<div class="chap">
+      <div class="chap-h">
+        <div class="chap-t" data-read="${c.id}" title="Читать главу">${esc(c.title)}<small>${w ? wordsLabel(w) : ''}</small></div>
+        <button class="ic" data-cup="${c.id}" title="Выше" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button class="ic" data-cdown="${c.id}" title="Ниже" ${i === cs.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="ic" data-cren="${c.id}" title="Переименовать">✎</button>
+        <button class="ic" data-cdel="${c.id}" title="Удалить главу">✕</button>
+      </div>
+      ${fs.length ? fs.map(f => `<div class="frag ${view.type === 'frag' && view.id === f.id ? 'on' : ''}" data-frag="${f.id}">
+          <i class="dot ${isEdited(f) ? 'ed' : ''}" title="${isEdited(f) ? 'Отредактирован' : 'Только расшифровка'}"></i>
+          <span>${esc(f.title)}</span>${f.hasAudio ? '<em>♪</em>' : ''}</div>`).join('')
+        : '<div class="empty-chap">Пока пусто</div>'}
+    </div>`;
+  }).join('');
+}
+$('chapList').onclick = e => {
+  const t = e.target.closest('[data-frag],[data-read],[data-cup],[data-cdown],[data-cren],[data-cdel]'); if (!t) return;
+  const d = t.dataset, cs = doc.chapters;
+  if (d.frag) { location.hash = 'text/frag/' + d.frag; return; }
+  if (d.read) { location.hash = 'text/read/' + d.read; return; }
+  if (d.cup || d.cdown) {
+    const i = cs.findIndex(c => c.id === (d.cup || d.cdown)); const j = d.cup ? i - 1 : i + 1;
+    if (j < 0 || j >= cs.length) return;
+    cs.forEach((c, k) => c.order = k); cs[i].order = j; cs[j].order = i;
+    const now = Date.now(); cs.forEach(c => c.updated = now);
+    fixup(doc); changed('порядок глав'); fillChapterSelect(); renderSide(); return;
+  }
+  if (d.cren) {
+    const c = chapById(d.cren); const n = prompt('Название главы:', c.title);
+    if (n && n.trim()) { c.title = n.trim(); touch(c, 'глава «' + c.title + '»'); fillChapterSelect(); renderSide(); renderPane(); }
+    return;
+  }
+  if (d.cdel) {
+    const c = chapById(d.cdel); const fs = fragsOf(c.id);
+    if (cs.length === 1) { toast('Нельзя удалить единственную главу'); return; }
+    const other = cs.find(x => x.id !== c.id);
+    if (!confirm(fs.length ? `Удалить главу «${c.title}»? Её фрагменты (${fs.length}) перейдут в главу «${other.title}».` : `Удалить главу «${c.title}»?`)) return;
+    let o = fragsOf(other.id).length; const now = Date.now();
+    for (const f of fs) { f.chapterId = other.id; f.order = o++; f.updated = now; }
+    doc.deleted[c.id] = now + 1; doc.chapters = cs.filter(x => x.id !== c.id);
+    changed('удалена глава «' + c.title + '»', 1500); fillChapterSelect();
+    if (view.type === 'read' && view.id === c.id) location.hash = 'text'; else { renderSide(); renderPane(); }
+  }
+};
+$('addChapBtn').onclick = () => { if (addChapter(prompt('Название новой главы:', ''))) renderSide(); };
+$('homeBtn').onclick = () => { location.hash = 'text'; };
+
+function renderPane() {
+  const p = $('pane');
+  if (view.type === 'frag' && fragById(view.id)) return renderEditor(p, view.id);
+  if (view.type === 'read' && chapById(view.id)) return renderRead(p, chapById(view.id));
+  renderHome(p);
+}
+
+/* --- обзор --- */
+function renderHome(p) {
+  const fsAll = doc.fragments;
+  const total = fsAll.reduce((s, f) => s + words(textOf(f)), 0);
+  const edited = fsAll.filter(isEdited).length;
+  const audioSec = fsAll.reduce((s, f) => s + (f.duration || 0), 0);
+  const recent = [...fsAll].sort((a, b) => b.updated - a.updated).slice(0, 5);
+  p.innerHTML = `
+    <h2>${esc(doc.title)}</h2>
+    <div class="meta">Обзор книги</div>
+    <div class="stats">
+      <div class="stat"><b>${doc.chapters.length}</b><span>глав</span></div>
+      <div class="stat"><b>${fsAll.length}</b><span>фрагментов</span></div>
+      <div class="stat"><b>${total.toLocaleString('ru-RU')}</b><span>слов (~${Math.max(1, Math.round(total / 250))} стр.)</span></div>
+      <div class="stat"><b>${edited}/${fsAll.length}</b><span>отредактировано</span></div>
+    </div>
+    ${audioSec ? `<p class="meta">Надиктовано: ${fmtTime(audioSec)}</p>` : ''}
+    ${fsAll.length ? `<h3 style="margin:18px 0 8px;font-size:15px">Недавние фрагменты</h3>
+      ${recent.map(f => `<div class="frag" data-go="${f.id}"><i class="dot ${isEdited(f) ? 'ed' : ''}"></i><span>${esc(f.title)} <em>· ${esc(chapById(f.chapterId)?.title || '')}</em></span></div>`).join('')}`
+      : `<p class="notice">Фрагментов пока нет. Перейдите в «Запись» и надиктуйте первый эпизод.</p>`}
+    <hr>
+    <label class="f" style="max-width:380px;margin-bottom:12px">Название книги
+      <input type="text" id="bookTitle" value="${esc(doc.title)}">
+    </label>
+    <div class="row">
+      <button class="btn" id="exMd">Скачать книгу .md</button>
+      <button class="btn" id="exTxt">Скачать .txt</button>
+      <button class="btn" id="exCopy">Скопировать всю книгу</button>
+    </div>
+    <hr>
+    <div class="row">
+      <a class="btn sm" href="https://github.com/${esc(auth.repo)}" target="_blank" rel="noopener">Репозиторий на GitHub</a>
+      <a class="btn sm" href="https://github.com/${esc(auth.repo)}/commits/${esc(auth.branch)}" target="_blank" rel="noopener">История изменений</a>
+    </div>
+    <p class="meta" style="margin-top:10px">Книга хранится в <b>${esc(auth.repo)}</b>: <code>book.json</code> — данные сайта, <code>book.md</code> — читаемый текст, <code>audio/</code> — записи голоса. Каждое сохранение — коммит, поэтому любую прежнюю версию можно найти в истории.</p>`;
+  p.querySelectorAll('[data-go]').forEach(x => x.onclick = () => location.hash = 'text/frag/' + x.dataset.go);
+  let tt;
+  $('bookTitle').oninput = e => { clearTimeout(tt); tt = setTimeout(() => { doc.title = e.target.value.trim() || 'Мемуары'; doc.titleUpdated = Date.now(); changed('название книги'); }, 500); };
+  $('exMd').onclick = () => download(fileSafe(doc.title) + '.md', bookText(true, doc));
+  $('exTxt').onclick = () => download(fileSafe(doc.title) + '.txt', bookText(false, doc));
+  $('exCopy').onclick = () => copy(bookText(false, doc));
+}
+function bookText(md, d) {
+  const byC = cid => d.fragments.filter(f => f.chapterId === cid && textOf(f).trim()).sort((a, b) => a.order - b.order || a.created - b.created);
+  let out = md ? `# ${d.title}\n\n` : `${d.title.toUpperCase()}\n\n\n`;
+  for (const c of [...d.chapters].sort((a, b) => a.order - b.order)) {
+    const fs = byC(c.id); if (!fs.length) continue;
+    out += md ? `## ${c.title}\n\n` : `${c.title}\n\n`;
+    fs.forEach((f, i) => {
+      if (md) out += `### ${f.title}\n\n`; else if (i) out += '* * *\n\n';
+      out += textOf(f).trim() + '\n\n';
+    });
+    if (!md) out += '\n';
+  }
+  return out.trim() + '\n';
+}
+
+/* --- чтение главы --- */
+function renderRead(p, c) {
+  const fs = fragsOf(c.id);
+  const paras = t => t.trim().split(/\n+/).map(x => `<p>${esc(x)}</p>`).join('');
+  p.innerHTML = `
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <span class="meta">Чтение главы · ${wordsLabel(fs.reduce((s, f) => s + words(textOf(f)), 0))}</span>
+      <div class="row">
+        <button class="btn sm" id="rdCopy">Копировать</button>
+        <button class="btn sm" id="rdMd">Скачать .md</button>
+      </div>
+    </div>
+    <article class="read">
+      <h1>${esc(c.title)}</h1>
+      ${fs.length ? fs.map(f => `<h3><a href="#text/frag/${f.id}" style="color:inherit;text-decoration:none">${esc(f.title)}</a></h3>
+        <div class="${isEdited(f) ? '' : 'raw'}">${paras(textOf(f)) || '<p class="muted">(только аудио)</p>'}</div>`).join('')
+        : '<p class="muted" style="text-indent:0">В этой главе пока нет фрагментов.</p>'}
+    </article>
+    ${fs.some(f => !isEdited(f)) ? '<p class="meta" style="text-align:center;margin-top:24px">Серым — фрагменты без редактуры (показана расшифровка).</p>' : ''}`;
+  const plain = `${c.title}\n\n` + fs.map(f => textOf(f).trim()).filter(Boolean).join('\n\n* * *\n\n');
+  $('rdCopy').onclick = () => copy(plain);
+  $('rdMd').onclick = () => download(fileSafe(c.title) + '.md', `## ${c.title}\n\n` + fs.map(f => `### ${f.title}\n\n${textOf(f).trim()}`).join('\n\n') + '\n');
+}
+
+/* --- редактор фрагмента --- */
+let audioUrl = null;
+async function renderEditor(p, id) {
+  const f0 = fragById(id);
+  const fs = fragsOf(f0.chapterId); const idx = fs.indexOf(f0);
+  p.innerHTML = `
+    <div class="row" style="justify-content:space-between;gap:8px">
+      <span class="meta">${esc(chapById(f0.chapterId)?.title || '')} · ${fmtDate(f0.created)}${f0.duration ? ' · ' + fmtTime(f0.duration) : ''}</span>
+      <div class="row" style="gap:4px">
+        <button class="ic" id="fUp" title="Выше в главе" ${idx <= 0 ? 'disabled' : ''}>↑</button>
+        <button class="ic" id="fDown" title="Ниже в главе" ${idx >= fs.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="btn sm danger" id="fDel">Удалить</button>
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="f" style="flex:2">Название<input type="text" id="fTitle" value="${esc(f0.title)}"></label>
+      <label class="f">Глава<select id="fChap">${doc.chapters.map(c => `<option value="${c.id}" ${c.id === f0.chapterId ? 'selected' : ''}>${esc(c.title)}</option>`).join('')}</select></label>
+    </div>
+    ${f0.hasAudio ? `<div class="row" style="margin-top:12px;flex-wrap:nowrap"><audio id="fAudio" controls preload="metadata"></audio><button class="btn sm" id="fAudioDl" title="Скачать аудио" disabled>⬇</button></div><div class="meta" id="audioMsg"></div>` : ''}
+    <div class="ed-cols">
+      <div>
+        <div class="col-h"><b>Расшифровка</b><span class="meta" id="cRaw"></span></div>
+        <textarea class="prose" id="fRaw" placeholder="Исходный текст диктовки">${esc(f0.raw)}</textarea>
+        <div class="tools">
+          <button class="btn sm" id="tCopyClaude" title="Скопировать с готовой инструкцией для Claude">Скопировать для Claude</button>
+        </div>
+      </div>
+      <div>
+        <div class="col-h"><b>Редактура</b><span class="meta" id="cEd"></span></div>
+        <textarea class="prose" id="fEd" placeholder="Нажмите «Взять расшифровку» или вставьте отредактированный текст">${esc(f0.edited)}</textarea>
+        <div class="tools">
+          <button class="btn sm" id="tTake">Взять расшифровку</button>
+          <button class="btn sm" id="tFill">Убрать слова-паразиты</button>
+          <button class="btn sm" id="tTidy">Причесать</button>
+          <button class="btn sm" id="tPara">Разбить на абзацы</button>
+          <button class="btn sm ghost" id="tUndo" disabled>↶ Отменить</button>
+        </div>
+      </div>
+    </div>
+    <div class="meta" style="margin-top:6px">Правки сохраняются автоматически — индикатор справа вверху.</div>`;
+
+  const cur = () => fragById(id);
+  const raw = $('fRaw'), ed = $('fEd');
+  const counts = () => { $('cRaw').textContent = wordsLabel(words(raw.value)); $('cEd').textContent = wordsLabel(words(ed.value)); };
+  counts();
+  let t;
+  const autosave = () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const f = cur(); if (!f) return;
+      const wasEd = isEdited(f), oldTitle = f.title;
+      f.title = $('fTitle').value.trim() || 'Без названия'; f.raw = raw.value; f.edited = ed.value;
+      touch(f, 'редактура «' + f.title + '»');
+      if (wasEd !== isEdited(f) || oldTitle !== f.title) renderSide();
+    }, 600);
+  };
+  [raw, ed, $('fTitle')].forEach(x => x.addEventListener('input', () => { counts(); autosave(); }));
+
+  const undo = undoStack[id] || (undoStack[id] = []);
+  $('tUndo').disabled = !undo.length;
+  const apply = fn => {
+    const before = ed.value; const after = fn(before);
+    if (after === before) { toast('Нечего менять'); return; }
+    undo.push(before); ed.value = after; $('tUndo').disabled = false; counts(); autosave();
+  };
+  $('tTake').onclick = () => { if (ed.value.trim() && !confirm('Заменить текст редактуры расшифровкой?')) return; apply(() => tidy(raw.value)); };
+  $('tFill').onclick = () => apply(s => removeFillers(s || raw.value));
+  $('tTidy').onclick = () => apply(s => tidy(s || raw.value));
+  $('tPara').onclick = () => apply(s => toParagraphs(s || raw.value));
+  $('tUndo').onclick = () => { if (!undo.length) return; ed.value = undo.pop(); $('tUndo').disabled = !undo.length; counts(); autosave(); };
+  $('tCopyClaude').onclick = () => copy(
+`Это расшифровка надиктованного фрагмента моих мемуаров. Отредактируй её в литературный текст: убери повторы и слова-паразиты, расставь пунктуацию и абзацы, исправь ошибки распознавания. Сохрани мой голос, интонации, характерные словечки и все факты — ничего не придумывай и не добавляй. Если какое-то место непонятно, оставь его как есть и пометь [?].
+
+Глава: ${chapById(cur()?.chapterId)?.title || ''}
+Фрагмент: ${$('fTitle').value.trim()}
+
+${raw.value.trim()}`);
+
+  $('fChap').onchange = e => {
+    const f = cur(); f.chapterId = e.target.value; const others = fragsOf(f.chapterId).filter(x => x !== f);
+    f.order = others.length ? Math.max(...others.map(x => x.order)) + 1 : 0;
+    touch(f, '«' + f.title + '» перенесён в другую главу', 1500); fixup(doc); renderSide(); renderPane();
+  };
+  const move = dir => {
+    const list = fragsOf(cur().chapterId); const i = list.findIndex(x => x.id === id), j = i + dir;
+    if (j < 0 || j >= list.length) return;
+    list.forEach((x, k) => x.order = k); list[i].order = j; list[j].order = i;
+    const now = Date.now(); list.forEach(x => x.updated = now);
+    fixup(doc); changed('порядок фрагментов'); renderSide(); renderPane();
+  };
+  $('fUp').onclick = () => move(-1); $('fDown').onclick = () => move(1);
+  $('fDel').onclick = async () => {
+    const f = cur();
+    if (!confirm(`Удалить фрагмент «${f.title}»${f.hasAudio ? ' вместе с аудио' : ''}? В истории репозитория он останется.`)) return;
+    doc.deleted[f.id] = Date.now() + 1; doc.fragments = doc.fragments.filter(x => x.id !== f.id);
+    await DB.del('pending', f.id).catch(() => {}); await DB.del('audioCache', f.id).catch(() => {});
+    changed('удалён фрагмент «' + f.title + '»', 1500);
+    location.hash = 'text/read/' + f.chapterId;
+  };
+
+  if (f0.hasAudio) {
+    $('audioMsg').textContent = 'Загружаю аудио…';
+    try {
+      const blob = await getAudio(f0);
+      if (!$('fAudio') || view.id !== id) return;
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      audioUrl = URL.createObjectURL(blob); $('fAudio').src = audioUrl; $('audioMsg').textContent = '';
+      $('fAudioDl').disabled = false;
+      $('fAudioDl').onclick = () => download(fileSafe(f0.title) + '.' + (f0.audioExt || 'webm'), blob);
+    } catch (e) { if ($('audioMsg')) $('audioMsg').textContent = 'Аудио не загрузилось: ' + e.message; }
+  }
+  if (window.innerWidth <= 860) p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ================= Старт ================= */
+(async function init() {
+  try { await DB.open(); }
+  catch { document.querySelector('main').innerHTML = '<div class="card pane"><h2>Хранилище недоступно</h2><p>Браузер запретил сохранять данные (возможно, приватный режим). Откройте сайт в обычном окне.</p></div>'; return; }
+  try { navigator.storage?.persist?.(); } catch {}
+  const draft = lsGet('diary-draft', ''); if (draft) { $('liveText').value = draft; updateCount(); setStatus('Восстановлен несохранённый текст прошлой записи'); }
+  if (!SR) {
+    $('srNotice').classList.remove('hidden');
+    $('srNotice').innerHTML = 'Этот браузер не умеет переводить речь в текст. Аудио всё равно запишется, а текст можно надиктовать микрофоном клавиатуры телефона прямо в поле ниже. Для автоматической расшифровки откройте сайт в <b>Chrome</b>.';
+  }
+  setMicUI();
+  window.addEventListener('hashchange', route);
+  auth = loadAuth();
+  if (auth?.token && auth?.repo) startApp(); else { auth = null; showLogin(); }
+})();
+</script>
+</body>
+</html>
